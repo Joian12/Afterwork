@@ -216,11 +216,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8286e41d94b4f48278caa3b479ab1261, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoomManager
-  _tileWidth: 32
-  _tileHeight: 32
+  _tileWidth: 64
+  _tileHeight: 64
   _tileWidthCount: 10
   _tileHeightCount: 10
-  tilePrefab: {fileID: 8694835990274831502, guid: 3cac02e06b44e463f9027905d766aade, type: 3}
+  tilePrefab: {fileID: 4375919268009647597, guid: 3cac02e06b44e463f9027905d766aade, type: 3}
   gridParent: {fileID: 1475478702}
 --- !u!4 &1336914106
 Transform:
@@ -274,7 +274,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 822, y: 462}
+  m_SizeDelta: {x: 800, y: 462}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1475478703
 MonoBehaviour:
