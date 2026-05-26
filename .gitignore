@@ -107,3 +107,7 @@ InitTestScene*.unity*
 Afterwork/Library
 Afterwork/Library
 Afterwork/Temp
+Afterwork/ProjectSettings/Packages/com.unity.dedicated-server
+Afterwork/Assets/MobileDependencyResolver
+Afterwork/UserSettings
+Afterwork/Assets/MobileDependencyResolver.meta
