@@ -1,5 +1,6 @@
 using UnityEngine;
 
+//USE MVVM PLEASE
 public class RoomManager : MonoBehaviour
 {
     //to data class
@@ -16,17 +17,28 @@ public class RoomManager : MonoBehaviour
     [SerializeField] private GameObject tilePrefab;      
     [SerializeField] private RectTransform gridParent; 
 
+    [SerializeField] private TileAsset[] _tileAssets;
+    
     private void Awake()
     {
+        _tileWidthCount = TemporaryTileData.RoomData[0].Length;
+        _tileHeightCount = TemporaryTileData.RoomData.Length;
+        
         CreateRoom();
     }
 
     private void CreateRoom()
     {
+         int[][] roomData = TemporaryTileData.RoomData; 
+        
         for (int col = 0; col < this._tileHeightCount; col++)
         {
+            int[] rowData = roomData[col];
+            
             for (int row = 0; row < this._tileWidthCount; row++)
             {
+                int tileType = rowData[row];
+                
                 GameObject newTile = Instantiate(tilePrefab, gridParent);
                 newTile.gameObject.SetActive(true);
                 newTile.name = $"Tile_{col}_{row}";
@@ -44,12 +56,32 @@ public class RoomManager : MonoBehaviour
                 
                 TileController tileController = newTile.GetComponent<TileController>();
 
-                TileData tileData = TileDataProvider.CreateTileData(col * row, TileType.Empty, col, row);
+                TileData tileData = TileDataProvider.CreateTileData(col * row, TileType.Empty);
+                
+                tileController.TileImage.texture = GetTileAsset(tileType).Sprite;
 
-                tileController.TileImage.color = tileData.Color;
+                tileController.TileImage.color = Color.white;
 
                 tileRect.anchoredPosition = new Vector2(posX, posY);
             }
         }
     }
+    
+    private TileAsset GetTileAsset(int tileType)
+    {
+        TileType type = (TileType)tileType;
+        
+        TileAsset tileAsset = _tileAssets[0];
+
+        for (int i = 0; i < _tileAssets.Length; i++)
+        {
+            if (_tileAssets[i].TileType == type)
+            {
+                tileAsset = _tileAssets[i];
+            }
+        }
+
+        return tileAsset;
+    }
 }
+
