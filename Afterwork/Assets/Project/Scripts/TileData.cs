@@ -6,7 +6,6 @@ public class TileData
     public TileType TileType;
     public int TilePosX;
     public int TilePosY;
-    public Color Color; // testing
 }
 
 public enum TileType
@@ -16,15 +15,26 @@ public enum TileType
     HorizontalWall = 2,
     VerticalWallLeft = 3,
     VerticalWallRight = 4,
-    Door = 5,
-    Equipment = 6,
+    HorizontalDoor = 5,
+    VerticalDoorLeft = 6,
+    VerticalDoorRight = 7,
+    Equipment = 8,
 }
 
-public static class TemporaryTileData
+public static class TemporaryRoomTileData
 {
-    public static int[][] RoomData = new []
+    public static readonly int[][] RoomData1 = new []
     {
-        new int[] {3, 2, 2, 2, 2, 4},
+        new int[] {3, 2, 5, 2, 2, 4},
+        new int[] {3, 1, 1, 1, 1, 4},
+        new int[] {3, 1, 1, 1, 1, 4},
+        new int[] {3, 1, 1, 1, 1, 4},
+        new int[] {2, 2, 2, 2, 2, 2},
+    };
+    
+    public static readonly int[][] RoomData2 = new []
+    {
+        new int[] {3, 2, 5, 2, 2, 4},
         new int[] {3, 1, 1, 1, 1, 4},
         new int[] {3, 1, 1, 1, 1, 4},
         new int[] {3, 1, 1, 1, 1, 4},
