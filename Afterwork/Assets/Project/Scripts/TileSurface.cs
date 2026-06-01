@@ -1,7 +1,6 @@
 using UnityEngine;
-using UnityEngine.UI;
 
-public class TileTexture : MonoBehaviour
+public class TileSurface : MonoBehaviour
 {
     [SerializeField] private Renderer _texture;
 
