@@ -4,6 +4,8 @@ public class TileSurface : MonoBehaviour
 {
     [SerializeField] private Renderer _texture;
 
+    public TileSurfaceType _TileSurface;
+    
     private MaterialPropertyBlock _block;
 
     private static readonly int MainTex = Shader.PropertyToID("_MainTex");

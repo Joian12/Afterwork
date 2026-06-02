@@ -5,7 +5,7 @@ public class TileInteraction : MonoBehaviour
     [SerializeField] private Camera _camera;
     [SerializeField] private LayerMask _layerMask;
     [SerializeField] private int _maxDistance = 100;
-    [SerializeField] private GameObject _tileSurfacePopUpEditor;
+    
     private bool _isPopUpEditorOpen = false;
     
     private void Update()
@@ -28,10 +28,20 @@ public class TileInteraction : MonoBehaviour
         {
             GameObject tile = hit.transform.gameObject;
             
-            // open pop up for texture selection
-            _tileSurfacePopUpEditor.SetActive(_isPopUpEditorOpen == false);
-
             _isPopUpEditorOpen = !_isPopUpEditorOpen;
+
+            TileSurface tileSurface = tile.GetComponent<TileSurface>();
+            
+            PopUpController.Instance.SetCurrentPopUp(PopUpType.TextureSelectionPopUp);
+            PopUpController.Instance.PopulateContent();
+            
+            if (_isPopUpEditorOpen)
+            {
+                PopUpController.Instance.ShowPopUp();
+            }else
+            {
+                PopUpController.Instance.HidePopUp();
+            }
 
             Debug.Log(tile.name);
             
