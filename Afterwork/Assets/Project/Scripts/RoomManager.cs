@@ -5,13 +5,6 @@ using UnityEngine.Serialization;
 //USE MVVM PLEASE
 public class RoomManager : MonoBehaviour
 { 
-   
-
     
-
-    private void GetSelectedTileData()
-    {
-        
-    }
 }
 

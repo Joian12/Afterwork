@@ -1,75 +1,44 @@
+using System;
 using UnityEngine;
 
 public class TileInteraction : MonoBehaviour
 {
     [SerializeField] private Camera _camera;
     [SerializeField] private LayerMask _layerMask;
-    [SerializeField] private int _maxDistance = 100;
-    
-    private bool _isPopUpEditorOpen = false;
+    [SerializeField] private float _maxDistance = 100f;
     
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            OpenTileSurfacePopUpEditor();
+            TrySelectTile();
         }
     }
 
-    private void OpenTileSurfacePopUpEditor()
+    private void TrySelectTile()
     {
-        Vector3 mousePosition = Input.mousePosition;
+        Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
         
-        mousePosition.z = _camera.nearClipPlane;
-        
-        Ray ray = _camera.ScreenPointToRay(mousePosition);
-        RaycastHit hit;
-        
-        if (Physics.Raycast(ray, out hit, _maxDistance, _layerMask.value))
+        if (Physics.Raycast(ray, out RaycastHit hit, _maxDistance, _layerMask))
         {
-            GameObject tile = hit.transform.gameObject;
-            
-            _isPopUpEditorOpen = !_isPopUpEditorOpen;
-
-            TileSurface tileSurface = tile.GetComponent<TileSurface>();
-
-            if (tileSurface == null)
+            if (hit.transform.TryGetComponent<TileSurface>(out var tileSurface) == false)
             {
                 return;
             }
-            
-            Debug.Log(tileSurface._TileSurfaceType.ToString());
+
+            Debug.Log($"Selected Tile: {hit.transform.name} | Surface: {tileSurface._TileSurfaceType}");
 
             PopUpController.Instance.SetCurrentPopUp(PopUpType.TextureSelectionPopUp);
             
             PopUpData newPopUpData = new PopUpData
             {
-                PopUpType = (int)tileSurface._TileSurfaceType
+                PopUpType = PopUpType.TextureSelectionPopUp,
+                SurfaceType = tileSurface._TileSurfaceType,
+                PopUpTitle = String.Empty,
             };
             
             PopUpController.Instance.PopulateContent(newPopUpData); 
-            
-            if (_isPopUpEditorOpen)
-            {
-                PopUpController.Instance.ShowPopUp();
-            }else
-            {
-                PopUpController.Instance.HidePopUp();
-            }
-
-            Debug.Log(tile.name);
+            PopUpController.Instance.ShowPopUp();
         }
     }
-}
-
-public class PopUpData : IPopUpData
-{
-    public int PopUpType { get; set; }
-    public string PopUpTitle { get; set; }
-}
-
-public interface IPopUpData
-{
-    int PopUpType { get; }
-    string PopUpTitle { get; }
 }

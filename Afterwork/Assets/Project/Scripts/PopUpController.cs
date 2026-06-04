@@ -13,8 +13,6 @@ public class PopUpController : MonoBehaviour
         Instance = this;
         
         _currentPopUp?.ResetContent();
-
-        _textureSelectionPopUp.Init();
     }
 
     public void ShowPopUp()
@@ -38,6 +36,8 @@ public class PopUpController : MonoBehaviour
                 _currentPopUp = _textureSelectionPopUp;
                 break;
         }
+        
+        _currentPopUp.Init();
     }
 
     public void PopulateContent(IPopUpData popUpData)

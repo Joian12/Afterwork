@@ -1,5 +1,6 @@
 public interface IPopUp
 {
+    void Init();
     PopUpType PopUpType { get; }
     void Show();
     void Hide();
