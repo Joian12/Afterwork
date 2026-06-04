@@ -15,10 +15,11 @@ public class TileInteraction : MonoBehaviour
             OpenTileSurfacePopUpEditor();
         }
     }
-    
-    public void OpenTileSurfacePopUpEditor()
+
+    private void OpenTileSurfacePopUpEditor()
     {
         Vector3 mousePosition = Input.mousePosition;
+        
         mousePosition.z = _camera.nearClipPlane;
         
         Ray ray = _camera.ScreenPointToRay(mousePosition);
@@ -31,9 +32,22 @@ public class TileInteraction : MonoBehaviour
             _isPopUpEditorOpen = !_isPopUpEditorOpen;
 
             TileSurface tileSurface = tile.GetComponent<TileSurface>();
+
+            if (tileSurface == null)
+            {
+                return;
+            }
             
+            Debug.Log(tileSurface._TileSurfaceType.ToString());
+
             PopUpController.Instance.SetCurrentPopUp(PopUpType.TextureSelectionPopUp);
-            PopUpController.Instance.PopulateContent();
+            
+            PopUpData newPopUpData = new PopUpData
+            {
+                PopUpType = (int)tileSurface._TileSurfaceType
+            };
+            
+            PopUpController.Instance.PopulateContent(newPopUpData); 
             
             if (_isPopUpEditorOpen)
             {
@@ -44,7 +58,18 @@ public class TileInteraction : MonoBehaviour
             }
 
             Debug.Log(tile.name);
-            
         }
     }
+}
+
+public class PopUpData : IPopUpData
+{
+    public int PopUpType { get; set; }
+    public string PopUpTitle { get; set; }
+}
+
+public interface IPopUpData
+{
+    int PopUpType { get; }
+    string PopUpTitle { get; }
 }

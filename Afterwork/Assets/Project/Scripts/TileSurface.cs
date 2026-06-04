@@ -1,10 +1,11 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class TileSurface : MonoBehaviour
 {
     [SerializeField] private Renderer _texture;
 
-    public TileSurfaceType _TileSurface;
+    public TileSurfaceType _TileSurfaceType;
     
     private MaterialPropertyBlock _block;
 

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PopUpController : MonoBehaviour
 {
-    [SerializeField] private IPopUp _currentPopUp;
+    private IPopUp _currentPopUp;
     
     [SerializeField] private TileTextureSurfacePopUp _textureSelectionPopUp;
     
@@ -13,6 +13,8 @@ public class PopUpController : MonoBehaviour
         Instance = this;
         
         _currentPopUp?.ResetContent();
+
+        _textureSelectionPopUp.Init();
     }
 
     public void ShowPopUp()
@@ -38,8 +40,8 @@ public class PopUpController : MonoBehaviour
         }
     }
 
-    public void PopulateContent()
+    public void PopulateContent(IPopUpData popUpData)
     {
-        _currentPopUp?.PopulateContent();
+        _currentPopUp?.PopulateContent(popUpData);
     }
 }

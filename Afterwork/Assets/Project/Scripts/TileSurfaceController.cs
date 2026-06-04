@@ -10,6 +10,6 @@ public class TileSurfaceController : MonoBehaviour
     public void SetTileSurface(TextureTileAsset tileAsset)
     {
         _tileSurfaceImage.texture = tileAsset.Sprite;
-        _tileSurfaceText.text = tileAsset.TileSurfaceType.ToString();
+        _tileSurfaceText.text = tileAsset.TileName;
     }
 }

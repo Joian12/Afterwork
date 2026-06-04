@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5281743548716572178}
   - component: {fileID: 6652481919502049755}
+  - component: {fileID: 5250649780594941810}
   m_Layer: 6
   m_Name: TileWall3D_prefab
   m_TagString: Untagged
@@ -46,6 +47,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TileController
   _texture: {fileID: 4710610875967969902}
+  _TileSurfaceType: 0
+--- !u!65 &5250649780594941810
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1366243523835821862}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1.1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0.33}
 --- !u!1 &7078853532718445738
 GameObject:
   m_ObjectHideFlags: 0

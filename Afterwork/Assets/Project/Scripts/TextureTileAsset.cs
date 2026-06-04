@@ -5,6 +5,7 @@ using UnityEngine.Serialization;
 public class TextureTileAsset : ScriptableObject
 {
     public int TileID;
+    public string TileName;
     public Texture Sprite;
     public TileSurfaceType TileSurfaceType;
 }

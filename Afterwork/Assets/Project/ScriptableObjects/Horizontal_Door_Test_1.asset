@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fccf322aa6444c7943dc3fc70cc34a3, type: 3}
   m_Name: Horizontal_Door_Test_1
   m_EditorClassIdentifier: Assembly-CSharp::TileAsset
-  TileID: 0
+  TileID: 2
+  TileName: Red Door
   Sprite: {fileID: 2800000, guid: 69fe065cacb674271a08ffaa185a5432, type: 3}
-  TileType: 5
+  TileSurfaceType: 3
