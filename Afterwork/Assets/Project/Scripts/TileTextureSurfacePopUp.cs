@@ -22,13 +22,11 @@ public class TileTextureSurfacePopUp : MonoBehaviour, IPopUp
 
         foreach (var tile in _tileAssets)
         {
-            // 1. If the SurfaceType doesn't exist yet, create the inner dictionary
             if (_tileAssetsDictionary.ContainsKey(tile.TileSurfaceType) == false)
             {
                 _tileAssetsDictionary.Add(tile.TileSurfaceType, new Dictionary<int, TextureTileAsset>());
             }
 
-            // 2. Add the asset to the nested inner dictionary using its TileID
             if (_tileAssetsDictionary[tile.TileSurfaceType].ContainsKey(tile.TileID) == false)
             {
                 _tileAssetsDictionary[tile.TileSurfaceType].Add(tile.TileID, tile);
@@ -52,11 +50,9 @@ public class TileTextureSurfacePopUp : MonoBehaviour, IPopUp
 
     public void PopulateContent(IPopUpData popUpData)
     {
-        // Clear old UI elements before generating new ones to avoid duplicating clones
         ResetContent();
 
-        // If you only want to populate tiles matching THIS popup's specific surface type:
-        if (_tileAssetsDictionary.TryGetValue((TileSurfaceType)popUpData.PopUpType, out var targetedTiles))
+        if (_tileAssetsDictionary.TryGetValue(popUpData.SurfaceType, out var targetedTiles))
         {
             foreach (var tileAsset in targetedTiles.Values)
             {
