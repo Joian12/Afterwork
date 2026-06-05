@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class TileInteraction : MonoBehaviour
 {
@@ -9,7 +10,7 @@ public class TileInteraction : MonoBehaviour
     
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && EventSystem.current.IsPointerOverGameObject() == false)
         {
             TrySelectTile();
         }

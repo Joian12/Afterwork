@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,10 +17,15 @@ public class TileTextureSurfacePopUp : MonoBehaviour, IPopUp
 
     public PopUpType PopUpType => PopUpType.TextureSelectionPopUp;
 
+    private void Awake()
+    {
+        _popUpGameObject.SetActive(false);
+    }
+
     public void Init()
     {
         _tileAssetsDictionary.Clear();
-
+        
         foreach (var tile in _tileAssets)
         {
             if (_tileAssetsDictionary.ContainsKey(tile.TileSurfaceType) == false)
@@ -79,7 +85,6 @@ public class TileTextureSurfacePopUp : MonoBehaviour, IPopUp
 
     public void ResetContent()
     {
-        // Properly destroy instantiated UI game objects in the container
         for (int i = 0; i < _container.childCount; i++)
         {
             Destroy(_container.GetChild(i).gameObject);
