@@ -11,8 +11,6 @@ public class PopUpController : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        
-        _currentPopUp?.ResetContent();
     }
 
     public void ShowPopUp()
@@ -40,8 +38,8 @@ public class PopUpController : MonoBehaviour
         _currentPopUp.Init();
     }
 
-    public void PopulateContent(IPopUpData popUpData)
+    public void PopulateContent(IPopUpData popUpData, ref TileSurface tileSurface)
     {
-        _currentPopUp?.PopulateContent(popUpData);
+        _currentPopUp?.PopulateContent(popUpData, ref tileSurface);
     }
 }

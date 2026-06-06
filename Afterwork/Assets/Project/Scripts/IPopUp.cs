@@ -4,6 +4,6 @@ public interface IPopUp
     PopUpType PopUpType { get; }
     void Show();
     void Hide();
-    void PopulateContent(IPopUpData popUpData);
+    void PopulateContent(IPopUpData popUpData, ref TileSurface tileSurface);
     void ResetContent();
 }

@@ -38,7 +38,7 @@ public class TileInteraction : MonoBehaviour
                 PopUpTitle = String.Empty,
             };
             
-            PopUpController.Instance.PopulateContent(newPopUpData); 
+            PopUpController.Instance.PopulateContent(newPopUpData, ref tileSurface); 
             PopUpController.Instance.ShowPopUp();
         }
     }
