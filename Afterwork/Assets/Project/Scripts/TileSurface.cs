@@ -28,7 +28,9 @@ public class TileSurface : MonoBehaviour
             TileId = asset.TileID,
             TilePos = _tilePos,
             TileName = asset.TileName,
-            SurfaceType = _TileSurfaceType
+            TileSurfaceType = _TileSurfaceType
         });
     }
+    
+    public int TilePos => _tilePos;
 }

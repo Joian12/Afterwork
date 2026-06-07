@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Vertical_Wall_Left_Test_1
   m_EditorClassIdentifier: Assembly-CSharp::TileAsset
   TileID: 4
-  TileName: Red Wall
+  TileName: Red Wall 1
   Sprite: {fileID: 2800000, guid: b1e49ce12ad7d437a992ffe972007c0f, type: 3}
   TileSurfaceType: 0

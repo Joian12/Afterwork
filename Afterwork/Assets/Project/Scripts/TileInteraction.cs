@@ -7,6 +7,7 @@ public class TileInteraction : MonoBehaviour
     [SerializeField] private Camera _camera;
     [SerializeField] private LayerMask _layerMask;
     [SerializeField] private float _maxDistance = 100f;
+    [SerializeField] private Grid _grid;
     
     private void Update()
     {

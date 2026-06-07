@@ -10,7 +10,6 @@ public class TileTextureSurfacePopUp : MonoBehaviour, IPopUp
     [SerializeField] private GameObject _tilePrefab;
     
     // Example of assets manager
-    [SerializeField] private List<TextureTileAsset> _tileAssets;
     [SerializeField] private Transform _container;
     
     private Dictionary<TileSurfaceType, Dictionary<int, TextureTileAsset>> _tileAssetsDictionary = new();
@@ -37,7 +36,9 @@ public class TileTextureSurfacePopUp : MonoBehaviour, IPopUp
     {
         _tileAssetsDictionary.Clear();
         
-        foreach (var tile in _tileAssets)
+        var tileAssets = RoomManager.Instance.GetTileAssets();
+        
+        foreach (var tile in tileAssets)
         {
             if (_tileAssetsDictionary.ContainsKey(tile.TileSurfaceType) == false)
             {

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class TilePersistenceManager : MonoBehaviour
@@ -18,14 +19,16 @@ public class TilePersistenceManager : MonoBehaviour
         Instance = this;
         
         _saveButton.onClick.AddListener(SaveTileSurfaceData);
+        
+        LoadTileSurfaceData();
     }
     
     public void AddTileSurfaceData(TileSurfaceData tileSurfaceData)
     {
         // just update it if it exists already
-        if (_tileSurfaceDataList.Contains(tileSurfaceData)) 
+        int index = _tileSurfaceDataList.FindIndex(x => x.TilePos == tileSurfaceData.TilePos);
+        if (index != -1) 
         {
-            int index = _tileSurfaceDataList.FindIndex(x => x.TileId == tileSurfaceData.TileId);
             _tileSurfaceDataList[index] = tileSurfaceData;
             return;
         }
@@ -40,6 +43,23 @@ public class TilePersistenceManager : MonoBehaviour
         
         string json = JsonUtility.ToJson(tileSurfaceDataWrapper, true);
         File.WriteAllText(_tileSurfaceDataPath, json);
+    }
+    
+    public void LoadTileSurfaceData()
+    {
+        if (File.Exists(_tileSurfaceDataPath) == false)
+        {
+            return;
+        }
+        
+        string json = File.ReadAllText(_tileSurfaceDataPath);
+        TileSurfaceDataWrapper tileSurfaceDataWrapper = JsonUtility.FromJson<TileSurfaceDataWrapper>(json);
+        _tileSurfaceDataList = tileSurfaceDataWrapper.TileSurfaceDataList;
+    }
+    
+    public List<TileSurfaceData> GetTileSurfaceDataList()
+    {
+        return _tileSurfaceDataList;
     }
 
     private void OnApplicationQuit()
@@ -62,7 +82,7 @@ public class TileSurfaceData
     public int TileId;
     public int TilePos;
     public string TileName;
-    public TileSurfaceType SurfaceType;
+    public TileSurfaceType TileSurfaceType;
 }
 
 [System.Serializable]

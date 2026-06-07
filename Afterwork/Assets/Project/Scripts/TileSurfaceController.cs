@@ -4,12 +4,15 @@ using UnityEngine.UI;
 
 public class TileSurfaceController : MonoBehaviour
 {
+    [SerializeField] private int _position;
+    
     [SerializeField] private RawImage _tileSurfaceImage;
     [SerializeField] private TextMeshProUGUI _tileSurfaceText;
     
     [SerializeField] private Button _chooseButton;
     private TextureTileAsset _cachedTileAsset;
     private TileSurface _cachedTileSurface;
+    
 
     private void OnEnable()
     {
@@ -34,6 +37,10 @@ public class TileSurfaceController : MonoBehaviour
         Debug.Log($"Chose tile {_cachedTileAsset.TileName}");
         
         //should show pop up to confirm choice
+      
+        //for now, just set tile surface
         _cachedTileSurface.SetSurfaceTile(_cachedTileAsset);
     }
+    
+    public int Position => _position;
 }
