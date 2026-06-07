@@ -3,6 +3,7 @@ using UnityEngine.Serialization;
 
 public class TileSurface : MonoBehaviour
 {
+    [SerializeField] private int _tilePos;
     [SerializeField] private Renderer _texture;
 
     public TileSurfaceType _TileSurfaceType;
@@ -16,10 +17,18 @@ public class TileSurface : MonoBehaviour
         this._block = new MaterialPropertyBlock();
     }
 
-    public void SetWallpaper(Texture texture)
+    public void SetSurfaceTile(TextureTileAsset asset)
     {
         this._texture.GetPropertyBlock(this._block);
-        this._block.SetTexture(MainTex, texture);
+        this._block.SetTexture(MainTex, asset.Sprite);
         this._texture.SetPropertyBlock(this._block);
+        
+        TilePersistenceManager.Instance.AddTileSurfaceData(new TileSurfaceData
+        {
+            TileId = asset.TileID,
+            TilePos = _tilePos,
+            TileName = asset.TileName,
+            SurfaceType = _TileSurfaceType
+        });
     }
 }

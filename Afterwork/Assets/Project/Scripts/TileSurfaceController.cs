@@ -32,6 +32,8 @@ public class TileSurfaceController : MonoBehaviour
     private void OnClickChooseTile()
     {
         Debug.Log($"Chose tile {_cachedTileAsset.TileName}");
-        _cachedTileSurface.SetWallpaper(_cachedTileAsset.Sprite);
+        
+        //should show pop up to confirm choice
+        _cachedTileSurface.SetSurfaceTile(_cachedTileAsset);
     }
 }
