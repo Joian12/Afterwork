@@ -28,8 +28,9 @@ public class PopUpController : MonoBehaviour
     {
         switch (popUpType)
         {
-            case PopUpType.TextureSelectionPopUp:
             case PopUpType.EquipmentSelectionPopUp:
+            case PopUpType.WallPaperSelectionPopUp:
+            case PopUpType.FloorSelectionPopUp:    
             default:
                 _currentPopUp = _textureSelectionPopUp;
                 break;

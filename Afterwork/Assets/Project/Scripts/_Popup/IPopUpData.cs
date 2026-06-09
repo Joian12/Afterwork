@@ -1,6 +1,5 @@
 public interface IPopUpData
 {
-    PopUpType PopUpType { get; }
-    TileSurfaceType SurfaceType { get; }
+    InteriorObjectType InteriorObjectType { get; }
     string PopUpTitle { get; }
 }

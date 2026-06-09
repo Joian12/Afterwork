@@ -1,21 +1,22 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class TileTextureSurfacePopUp : MonoBehaviour, IPopUp
 {
     [SerializeField] private GameObject _popUpGameObject;
-    [SerializeField] private TileSurfaceType _tileSurfaceType;
+    [FormerlySerializedAs("_tileSurfaceType")] [SerializeField] private InteriorObjectType interiorObjectType;
     
     [SerializeField] private GameObject _tilePrefab;
     
     // Example of assets manager
     [SerializeField] private Transform _container;
     
-    private Dictionary<TileSurfaceType, Dictionary<int, TextureTileAsset>> _tileAssetsDictionary = new();
+    private Dictionary<InteriorObjectType, Dictionary<int, TextureTileAsset>> _tileAssetsDictionary = new();
     [SerializeField] private Button _closeButton;
 
-    public PopUpType PopUpType => PopUpType.TextureSelectionPopUp;
+    public PopUpType PopUpType => PopUpType.WallPaperSelectionPopUp;
 
     private void Awake()
     {
@@ -40,18 +41,18 @@ public class TileTextureSurfacePopUp : MonoBehaviour, IPopUp
         
         foreach (var tile in tileAssets)
         {
-            if (_tileAssetsDictionary.ContainsKey(tile.TileSurfaceType) == false)
+            if (_tileAssetsDictionary.ContainsKey(tile.interiorObjectType) == false)
             {
-                _tileAssetsDictionary.Add(tile.TileSurfaceType, new Dictionary<int, TextureTileAsset>());
+                _tileAssetsDictionary.Add(tile.interiorObjectType, new Dictionary<int, TextureTileAsset>());
             }
 
-            if (_tileAssetsDictionary[tile.TileSurfaceType].ContainsKey(tile.TileID) == false)
+            if (_tileAssetsDictionary[tile.interiorObjectType].ContainsKey(tile.TileID) == false)
             {
-                _tileAssetsDictionary[tile.TileSurfaceType].Add(tile.TileID, tile);
+                _tileAssetsDictionary[tile.interiorObjectType].Add(tile.TileID, tile);
             }
             else
             {
-                Debug.LogWarning($"Duplicate TileID {tile.TileID} found for SurfaceType {tile.TileSurfaceType}!");
+                Debug.LogWarning($"Duplicate TileID {tile.TileID} found for SurfaceType {tile.interiorObjectType}!");
             }
         }
     }
@@ -70,22 +71,13 @@ public class TileTextureSurfacePopUp : MonoBehaviour, IPopUp
     {
         ResetContent();
 
-        if (_tileAssetsDictionary.TryGetValue(popUpData.SurfaceType, out var targetedTiles))
+        if (_tileAssetsDictionary.TryGetValue(popUpData.InteriorObjectType, out var targetedTiles))
         {
             foreach (var tileAsset in targetedTiles.Values)
             {
                 CreateTileUI(tileAsset, ref tileSurface);
             }
         }
-        
-        //  foreach (var innerDict in _tileAssetsDictionary.Values)
-       //  {
-       //      foreach (var tileAsset in innerDict.Values)
-       //      {
-       //          CreateTileUI(tileAsset);
-       //      }
-       //  }
-       //  */
     }
 
     private void CreateTileUI(TextureTileAsset asset, ref TileSurface tileSurface)

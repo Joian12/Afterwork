@@ -7,5 +7,5 @@ public class TextureTileAsset : ScriptableObject
     public int TileID;
     public string TileName;
     public Texture Sprite;
-    public TileSurfaceType TileSurfaceType;
+    [FormerlySerializedAs("TileSurfaceType")] public InteriorObjectType interiorObjectType;
 }

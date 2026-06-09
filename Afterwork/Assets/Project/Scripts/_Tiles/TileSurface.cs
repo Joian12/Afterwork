@@ -6,10 +6,9 @@ public class TileSurface : MonoBehaviour
     [SerializeField] private int _tilePos;
     [SerializeField] private Renderer _texture;
 
-    public TileSurfaceType _TileSurfaceType;
+    public InteriorObjectType interiorObjectType;
     
     private MaterialPropertyBlock _block;
-
     private static readonly int MainTex = Shader.PropertyToID("_MainTex");
 
     private void Awake()
@@ -28,7 +27,7 @@ public class TileSurface : MonoBehaviour
             TileId = asset.TileID,
             TilePos = _tilePos,
             TileName = asset.TileName,
-            TileSurfaceType = _TileSurfaceType
+            interiorObjectType = interiorObjectType
         });
     }
     

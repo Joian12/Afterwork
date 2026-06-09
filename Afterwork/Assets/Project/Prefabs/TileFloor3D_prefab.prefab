@@ -46,8 +46,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 618008f86767497e80e59f4f9f69c817, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TileController
+  _tilePos: 0
   _texture: {fileID: 8645824110258901436}
-  _TileSurfaceType: 1
+  interiorObjectType: 1
 --- !u!65 &7882906232246733148
 BoxCollider:
   m_ObjectHideFlags: 0

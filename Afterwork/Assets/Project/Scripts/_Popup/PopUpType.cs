@@ -1,6 +1,6 @@
 public enum PopUpType
 {
-    TextureSelectionPopUp,
-
+    WallPaperSelectionPopUp,
+    FloorSelectionPopUp,
     EquipmentSelectionPopUp,
 }

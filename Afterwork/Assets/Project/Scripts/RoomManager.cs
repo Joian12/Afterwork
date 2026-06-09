@@ -47,7 +47,7 @@ public class RoomManager : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning($"Missing TextureTileAsset for surface type: {data.TileSurfaceType}");
+                Debug.LogWarning($"Missing TextureTileAsset for surface type: {data.interiorObjectType}");
             }
         }
     }
@@ -60,14 +60,14 @@ public class RoomManager : MonoBehaviour
 
 public interface IMountable
 {
-    TileSurfaceType SurfaceType { get; }
+    InteriorObjectType SurfaceType { get; }
     int PositionX { get; }
     int PositionY { get; }
 }
 
 public sealed class DefaultMountable : IMountable
 {
-    public TileSurfaceType SurfaceType { get; }
+    public InteriorObjectType SurfaceType { get; }
     public int PositionX { get; }
     public int PositionY { get; }
 }

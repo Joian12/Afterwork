@@ -82,7 +82,7 @@ public class TileSurfaceData
     public int TileId;
     public int TilePos;
     public string TileName;
-    public TileSurfaceType TileSurfaceType;
+    [FormerlySerializedAs("TileSurfaceType")] public InteriorObjectType interiorObjectType;
 }
 
 [System.Serializable]
