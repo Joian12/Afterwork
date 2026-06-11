@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4fccf322aa6444c7943dc3fc70cc34a3, type: 3}
-  m_Name: Vertical_Wall_Right_Test_1
+  m_Name: Horizontal_Wall_Test_1
   m_EditorClassIdentifier: Assembly-CSharp::TileAsset
-  TileID: 5
-  TileName: Red Wall 2
-  Sprite: {fileID: 2800000, guid: 4dc8581dc934740309de3a86ae3f220d, type: 3}
-  TileSurfaceType: 0
+  TileID: 2
+  TileName: Line Wall
+  interiorObjectType: 0
+  Sprite: {fileID: 2800000, guid: 0c6115c773fac46dfa4d3ba30e2927e9, type: 3}

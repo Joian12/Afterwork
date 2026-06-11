@@ -9,7 +9,9 @@ public class RoomManager : MonoBehaviour
     [SerializeField] private List<TileSurface> _tileSurfaces;
     [SerializeField] private TilePersistenceManager _tilePersistenceManager;
     [SerializeField] private List<TextureTileAsset> _tileAssets;
-
+    
+    public static TileSurface SelectedTileSurface;
+    
     private void Awake()
     {
         Instance = this;
@@ -39,7 +41,7 @@ public class RoomManager : MonoBehaviour
                 continue;
             }
         
-            TextureTileAsset asset = _tileAssets.Find(x => x.TileID == data.TileId);
+            TextureTileAsset asset = _tileAssets.Find(x => x.TileID == data.TileId && x.interiorObjectType == data.interiorObjectType);
         
             if (asset != null)
             {
@@ -55,6 +57,11 @@ public class RoomManager : MonoBehaviour
     public List<TextureTileAsset> GetTileAssets()
     {
         return _tileAssets;
+    }
+
+    public List<EquipmentTileAsset> GetEquipmentAssets()
+    {
+        return new List<EquipmentTileAsset>();
     }
 }
 

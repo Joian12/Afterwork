@@ -11,8 +11,6 @@ public class TileSurfaceController : MonoBehaviour
     
     [SerializeField] private Button _chooseButton;
     private TextureTileAsset _cachedTileAsset;
-    private TileSurface _cachedTileSurface;
-    
 
     private void OnEnable()
     {
@@ -24,12 +22,11 @@ public class TileSurfaceController : MonoBehaviour
         _chooseButton.onClick.RemoveListener(OnClickChooseTile);
     }
 
-    public void SetTileSurface(TextureTileAsset tileAsset, ref TileSurface tileSurface)
+    public void SetTileSurface(TextureTileAsset tileAsset)
     {
         _cachedTileAsset = tileAsset;
         _tileSurfaceImage.texture = tileAsset.Sprite;
         _tileSurfaceText.text = tileAsset.TileName;
-        _cachedTileSurface = tileSurface;
     }
 
     private void OnClickChooseTile()
@@ -39,7 +36,7 @@ public class TileSurfaceController : MonoBehaviour
         //should show pop up to confirm choice
       
         //for now, just set tile surface
-        _cachedTileSurface.SetSurfaceTile(_cachedTileAsset);
+        RoomManager.SelectedTileSurface.SetSurfaceTile(_cachedTileAsset);
     }
     
     public int Position => _position;

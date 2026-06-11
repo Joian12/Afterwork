@@ -85,9 +85,9 @@ public sealed class AppliancePlacementHandler : MonoBehaviour, IEditModeHandler
         var data = new PlacedApplianceData
         {
             PrefabName = _selectedPrefab.name,
-            CellX      = cell.x,
-            CellY      = cell.y,
-            CellZ      = cell.z
+            CellX = cell.x,
+            CellY = cell.y,
+            CellZ = cell.z
         };
 
         _placedAppliances.Add(new PlacedAppliance { SceneObject = placed, Data = data });

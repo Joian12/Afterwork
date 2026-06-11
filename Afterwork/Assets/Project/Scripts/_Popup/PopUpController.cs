@@ -39,8 +39,8 @@ public class PopUpController : MonoBehaviour
         _currentPopUp.Init();
     }
 
-    public void PopulateContent(IPopUpData popUpData, ref TileSurface tileSurface)
+    public void PopulateContent(IPopUpData popUpData)
     {
-        _currentPopUp?.PopulateContent(popUpData, ref tileSurface);
+        _currentPopUp?.PopulateContent(popUpData);
     }
 }

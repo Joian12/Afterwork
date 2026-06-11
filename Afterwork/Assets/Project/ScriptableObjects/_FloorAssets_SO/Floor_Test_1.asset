@@ -15,4 +15,4 @@ MonoBehaviour:
   TileID: 1
   TileName: Peach Floor
   Sprite: {fileID: 2800000, guid: 39ff3bf4b45d7421594bde3e30f99803, type: 3}
-  TileSurfaceType: 1
+  interiorObjectType: 1

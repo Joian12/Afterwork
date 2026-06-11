@@ -1,19 +1,17 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class TileTextureSurfacePopUp : MonoBehaviour, IPopUp
 {
     [SerializeField] private GameObject _popUpGameObject;
-    [FormerlySerializedAs("_tileSurfaceType")] [SerializeField] private InteriorObjectType interiorObjectType;
-    
-    [SerializeField] private GameObject _tilePrefab;
+    [SerializeField] private GameObject _selectionPrefab;
     
     // Example of assets manager
     [SerializeField] private Transform _container;
     
     private Dictionary<InteriorObjectType, Dictionary<int, TextureTileAsset>> _tileAssetsDictionary = new();
+    
     [SerializeField] private Button _closeButton;
 
     public PopUpType PopUpType => PopUpType.WallPaperSelectionPopUp;
@@ -67,7 +65,7 @@ public class TileTextureSurfacePopUp : MonoBehaviour, IPopUp
         _popUpGameObject.SetActive(false);
     }
 
-    public void PopulateContent(IPopUpData popUpData, ref TileSurface tileSurface)
+    public void PopulateContent(IPopUpData popUpData)
     {
         ResetContent();
 
@@ -75,16 +73,16 @@ public class TileTextureSurfacePopUp : MonoBehaviour, IPopUp
         {
             foreach (var tileAsset in targetedTiles.Values)
             {
-                CreateTileUI(tileAsset, ref tileSurface);
+                CreateTileUI(tileAsset);
             }
         }
     }
 
-    private void CreateTileUI(TextureTileAsset asset, ref TileSurface tileSurface)
+    private void CreateTileUI(TextureTileAsset assets)
     {
-        GameObject tile = Instantiate(_tilePrefab, _container);
+        GameObject tile = Instantiate(_selectionPrefab, _container);
         TileSurfaceController tileSurfaceController = tile.GetComponent<TileSurfaceController>();
-        tileSurfaceController.SetTileSurface(asset, ref tileSurface);
+        tileSurfaceController.SetTileSurface(assets);
     }
 
     public void ResetContent()

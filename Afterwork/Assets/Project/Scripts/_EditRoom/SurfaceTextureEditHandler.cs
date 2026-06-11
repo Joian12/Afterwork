@@ -54,6 +54,8 @@ public abstract class SurfaceTextureEditHandler : MonoBehaviour, IEditModeHandle
             return;
         }
 
+        RoomManager.SelectedTileSurface = surface;
+
         PopUpController.Instance.SetCurrentPopUp(TargetPopUpType);
 
         var data = new PopUpData
@@ -61,8 +63,9 @@ public abstract class SurfaceTextureEditHandler : MonoBehaviour, IEditModeHandle
             InteriorObjectType = TargetSurface,
             PopUpTitle = string.Empty
         };
-
-        PopUpController.Instance.PopulateContent(data, ref surface);
+        
+        PopUpController.Instance.PopulateContent(data); // populate depending on type. 
         PopUpController.Instance.ShowPopUp();
     }
 }
+
