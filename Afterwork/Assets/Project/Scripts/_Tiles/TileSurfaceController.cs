@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,33 +11,45 @@ public class TileSurfaceController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _tileSurfaceText;
     
     [SerializeField] private Button _chooseButton;
-    private TextureTileAsset _cachedTileAsset;
+    private TileAsset _cachedTileAsset;
+    
+    public static Action<EquipmentTileAsset> OnEquipmentSelect;
 
     private void OnEnable()
     {
-        _chooseButton.onClick.AddListener(OnClickChooseTile);
+        this._chooseButton.onClick.AddListener(OnSelectItem);
     }
 
     private void OnDisable()
     {
-        _chooseButton.onClick.RemoveListener(OnClickChooseTile);
+        this._chooseButton.onClick.RemoveListener(OnSelectItem);
     }
 
-    public void SetTileSurface(TextureTileAsset tileAsset)
+    public void SetTileSurface(TileAsset tileAsset)
     {
-        _cachedTileAsset = tileAsset;
-        _tileSurfaceImage.texture = tileAsset.Sprite;
-        _tileSurfaceText.text = tileAsset.TileName;
+        this._cachedTileAsset = tileAsset;
+        this._tileSurfaceImage.texture = tileAsset.Sprite;
+        this._tileSurfaceText.text = tileAsset.TileName;
     }
 
-    private void OnClickChooseTile()
+    private void OnSelectItem()
     {
-        Debug.Log($"Chose tile {_cachedTileAsset.TileName}");
+        Debug.Log($"Chose tile {this._cachedTileAsset.TileName}");
+
+        switch (this._cachedTileAsset.interiorObjectType)
+        {
+            case InteriorObjectType.Wall:
+            case InteriorObjectType.Floor:
+                RoomManager.SelectedTileSurface.SetSurfaceTile(_cachedTileAsset);
+                break;
+            case InteriorObjectType.Equipment:
+                OnEquipmentSelect?.Invoke((EquipmentTileAsset)this._cachedTileAsset);
+                break;
+            case InteriorObjectType.Door:
+                break;
+        }
         
         //should show pop up to confirm choice
-      
-        //for now, just set tile surface
-        RoomManager.SelectedTileSurface.SetSurfaceTile(_cachedTileAsset);
     }
     
     public int Position => _position;

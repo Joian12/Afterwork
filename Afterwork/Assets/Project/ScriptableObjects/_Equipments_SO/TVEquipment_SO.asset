@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89e9613d37f0462daa295a5c67e7f5a1, type: 3}
   m_Name: TVEquipment_SO
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentTileAsset
-  TileID: 0
-  TileName: 
-  interiorObjectType: 0
-  TilePrefab: {fileID: 0}
+  Sprite: {fileID: 2800000, guid: dffef66376be4fa480fb02b19edbe903, type: 3}
+  TileID: 2
+  TileName: TV_1
+  interiorObjectType: 2
+  TilePrefab: {fileID: 5851348457415655651, guid: f67d56d00e37f4b2b97c94cb89fd2179, type: 3}

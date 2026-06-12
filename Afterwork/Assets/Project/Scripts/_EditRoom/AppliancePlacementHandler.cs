@@ -13,43 +13,50 @@ public sealed class AppliancePlacementHandler : MonoBehaviour, IEditModeHandler
     private GameObject _selectedPrefab;
 
     private GameObject _ghost;
+    
+    private EquipmentTileAsset _selectedEquipmentAsset;
 
     // Runtime tracking of what's been placed this session
     private readonly List<PlacedAppliance> _placedAppliances = new();
 
     private void Awake()
     {
-        _camera = Camera.main;
+        this._camera = Camera.main;
+    }
+
+    private void OnEnable()
+    {
+        TileSurfaceController.OnEquipmentSelect += SelectAppliance;
     }
 
     private void Update()
     {
-        if (_selectedPrefab == null || _ghost == null)
+        if (this._selectedPrefab == null || this._ghost == null)
         {
             return;
         }
 
-        Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
+        Ray ray = this._camera.ScreenPointToRay(Input.mousePosition);
 
-        if (Physics.Raycast(ray, out RaycastHit hit, MaxDistance, _floorMask))
+        if (Physics.Raycast(ray, out RaycastHit hit, MaxDistance, this._floorMask))
         {
-            Vector3Int cell = _grid.WorldToCell(hit.point);
-            Vector3 snapped = _grid.GetCellCenterWorld(cell);
-
-            _ghost.SetActive(true);
-            _ghost.transform.position = snapped;
+            Vector3Int cell = this._grid.WorldToCell(hit.point);
+            Vector3 snapped = this._grid.GetCellCenterWorld(cell);
+            
+            this._ghost.SetActive(true);
+            this._ghost.transform.position = snapped;
 
             if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
             {
-                PlaceAppliance(snapped, cell);
+                PlaceAppliance(snapped);
             }
         }
         else
         {
-            _ghost.SetActive(false);
+            this._ghost.SetActive(false);
         }
 
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1)) // testing
         {
             ClearSelection();
         }
@@ -66,47 +73,52 @@ public sealed class AppliancePlacementHandler : MonoBehaviour, IEditModeHandler
         ClearGhost();
     }
     
-    public void SelectAppliance(GameObject prefab)
+    public void SelectAppliance(EquipmentTileAsset tileAsset)
     {
-        _selectedPrefab = prefab;
+        this._selectedEquipmentAsset = tileAsset;
+        this._selectedPrefab = tileAsset.TilePrefab;
         ClearGhost();
 
-        if (prefab == null)
+        if (tileAsset.TilePrefab == null)
             return;
 
-        _ghost = Instantiate(prefab);
-        MakeGhostTransparent(_ghost, 0.4f);
+        this._ghost = Instantiate(tileAsset.TilePrefab);
+        MakeGhostTransparent(this._ghost, 0.4f);
     }
     
-    private void PlaceAppliance(Vector3 worldPosition, Vector3Int cell)
+    private void PlaceAppliance(Vector3 worldPosition)
     {
-        GameObject placed = Instantiate(_selectedPrefab, worldPosition, Quaternion.identity);
+        GameObject placed = Instantiate(this._selectedPrefab, worldPosition, Quaternion.identity);
 
+        float x = worldPosition.x;
+        
         var data = new PlacedApplianceData
         {
-            PrefabName = _selectedPrefab.name,
-            CellX = cell.x,
-            CellY = cell.y,
-            CellZ = cell.z
+            TileID = this._selectedEquipmentAsset.TileID,
+            PrefabName = this._selectedPrefab.name,
+            CellX = worldPosition.x,
+            CellY = worldPosition.y,
+            CellZ = worldPosition.z
         };
 
-        _placedAppliances.Add(new PlacedAppliance { SceneObject = placed, Data = data });
+        this._placedAppliances.Add(new PlacedAppliance { SceneObject = placed, Data = data });
         
         AppliancePersistenceManager.Instance?.AddOrUpdateAppliance(data);
     }
 
     private void ClearGhost()
     {
-        if (_ghost != null)
+        if (this._ghost != null)
         {
-            Destroy(_ghost);
-            _ghost = null;
+            Destroy(this._ghost);
+            this._ghost = null;
         }
     }
 
     private void ClearSelection()
     {
-        _selectedPrefab = null;
+        this._selectedPrefab = null;
+        this._selectedEquipmentAsset = null;
         ClearGhost();
     }
     

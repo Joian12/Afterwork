@@ -8,7 +8,7 @@ public class RoomManager : MonoBehaviour
     
     [SerializeField] private List<TileSurface> _tileSurfaces;
     [SerializeField] private TilePersistenceManager _tilePersistenceManager;
-    [SerializeField] private List<TextureTileAsset> _tileAssets;
+    [SerializeField] private List<TileAsset> _tileAssets;
     
     public static TileSurface SelectedTileSurface;
     
@@ -20,20 +20,45 @@ public class RoomManager : MonoBehaviour
     private void Start()
     {
         InitializeRoomTile();
+        InitializeEquipmentPlacement();
+    }
+
+    private void InitializeEquipmentPlacement()
+    {
+        List<PlacedApplianceData> appliances = AppliancePersistenceManager.Instance.GetAppliances();
+        
+        if (appliances == null || appliances.Count == 0)
+        {
+            return;
+        }
+
+        foreach (PlacedApplianceData appliance in appliances)
+        {
+            EquipmentTileAsset equipmentAsset = GetTileAssets().Find(x => x.TileID == appliance.TileID && x is EquipmentTileAsset) as EquipmentTileAsset;
+            
+            if (equipmentAsset == null)
+            {
+                continue;
+            }
+            
+            Vector3 worldPosition = new Vector3(appliance.CellX, 0, appliance.CellZ);
+            
+            GameObject placed = Instantiate(equipmentAsset.TilePrefab, worldPosition, Quaternion.identity);
+        }
     }
     
     private void InitializeRoomTile()
     {
-        _tilePersistenceManager.LoadTileSurfaceData();
+        this._tilePersistenceManager.LoadTileSurfaceData();
         
-        List<TileSurfaceData> tileSurfaceDataList = _tilePersistenceManager.GetTileSurfaceDataList();
+        List<TileSurfaceData> tileSurfaceDataList = this._tilePersistenceManager.GetTileSurfaceDataList();
 
         if (tileSurfaceDataList == null || tileSurfaceDataList.Count == 0)
         {
             return;
         }
     
-        foreach (var tileSurface in _tileSurfaces)
+        foreach (var tileSurface in this._tileSurfaces)
         {
             TileSurfaceData data = tileSurfaceDataList.Find(x => x.TilePos == tileSurface.TilePos);
             if (data == null)
@@ -41,7 +66,7 @@ public class RoomManager : MonoBehaviour
                 continue;
             }
         
-            TextureTileAsset asset = _tileAssets.Find(x => x.TileID == data.TileId && x.interiorObjectType == data.interiorObjectType);
+            TileAsset asset = this._tileAssets.Find(x => x.TileID == data.TileId && x.interiorObjectType == data.interiorObjectType);
         
             if (asset != null)
             {
@@ -54,14 +79,9 @@ public class RoomManager : MonoBehaviour
         }
     }
     
-    public List<TextureTileAsset> GetTileAssets()
+    public List<TileAsset> GetTileAssets()
     {
         return _tileAssets;
-    }
-
-    public List<EquipmentTileAsset> GetEquipmentAssets()
-    {
-        return new List<EquipmentTileAsset>();
     }
 }
 

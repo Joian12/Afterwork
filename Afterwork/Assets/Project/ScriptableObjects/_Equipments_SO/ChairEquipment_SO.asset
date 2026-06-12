@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89e9613d37f0462daa295a5c67e7f5a1, type: 3}
   m_Name: ChairEquipment_SO
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentTileAsset
-  TileID: 0
-  TileName: 
-  interiorObjectType: 0
-  TilePrefab: {fileID: 0}
+  Sprite: {fileID: 28684132378477856, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  TileID: 1
+  TileName: Chair_1
+  interiorObjectType: 2
+  TilePrefab: {fileID: 5054349624119795601, guid: d66096e7c2361433e9fb2f2a7b83c614, type: 3}

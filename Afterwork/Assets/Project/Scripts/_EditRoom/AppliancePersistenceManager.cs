@@ -23,14 +23,18 @@ public class AppliancePersistenceManager : MonoBehaviour
             x.CellZ == data.CellZ);
 
         if (index != -1)
+        {
             _saveData.Appliances[index] = data;
+        }
         else
+        {
             _saveData.Appliances.Add(data);
+        }
     }
 
     public void RemoveAppliance(PlacedApplianceData data)
     {
-        _saveData.Appliances.RemoveAll(x =>
+        this._saveData.Appliances.RemoveAll(x =>
             x.CellX == data.CellX &&
             x.CellY == data.CellY &&
             x.CellZ == data.CellZ);
@@ -53,7 +57,7 @@ public class AppliancePersistenceManager : MonoBehaviour
             return;
 
         string json = File.ReadAllText(_savePath);
-        _saveData = JsonUtility.FromJson<ApplianceSaveData>(json) ?? new ApplianceSaveData();
+        this._saveData = JsonUtility.FromJson<ApplianceSaveData>(json) ?? new ApplianceSaveData();
     }
 
 

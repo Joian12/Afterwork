@@ -16,7 +16,7 @@ public class TileSurface : MonoBehaviour
         this._block = new MaterialPropertyBlock();
     }
 
-    public void SetSurfaceTile(TextureTileAsset asset)
+    public void SetSurfaceTile(TileAsset asset)
     {
         this._texture.GetPropertyBlock(this._block);
         this._block.SetTexture(MainTex, asset.Sprite);

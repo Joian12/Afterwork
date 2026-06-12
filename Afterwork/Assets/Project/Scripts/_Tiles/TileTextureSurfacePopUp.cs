@@ -10,7 +10,7 @@ public class TileTextureSurfacePopUp : MonoBehaviour, IPopUp
     // Example of assets manager
     [SerializeField] private Transform _container;
     
-    private Dictionary<InteriorObjectType, Dictionary<int, TextureTileAsset>> _tileAssetsDictionary = new();
+    private Dictionary<InteriorObjectType, Dictionary<int, TileAsset>> _tileAssetsDictionary = new();
     
     [SerializeField] private Button _closeButton;
 
@@ -41,7 +41,7 @@ public class TileTextureSurfacePopUp : MonoBehaviour, IPopUp
         {
             if (_tileAssetsDictionary.ContainsKey(tile.interiorObjectType) == false)
             {
-                _tileAssetsDictionary.Add(tile.interiorObjectType, new Dictionary<int, TextureTileAsset>());
+                _tileAssetsDictionary.Add(tile.interiorObjectType, new Dictionary<int, TileAsset>());
             }
 
             if (_tileAssetsDictionary[tile.interiorObjectType].ContainsKey(tile.TileID) == false)
@@ -78,7 +78,7 @@ public class TileTextureSurfacePopUp : MonoBehaviour, IPopUp
         }
     }
 
-    private void CreateTileUI(TextureTileAsset assets)
+    private void CreateTileUI(TileAsset assets)
     {
         GameObject tile = Instantiate(_selectionPrefab, _container);
         TileSurfaceController tileSurfaceController = tile.GetComponent<TileSurfaceController>();

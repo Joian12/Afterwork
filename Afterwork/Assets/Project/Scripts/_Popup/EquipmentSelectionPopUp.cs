@@ -18,13 +18,18 @@ public sealed class EquipmentSelectionPopUp : MonoBehaviour, IPopUp
     
     public void Init()
     {
-        var equipmentAssets = RoomManager.Instance.GetEquipmentAssets();
+        var equipmentAssets = RoomManager.Instance.GetTileAssets();
         
-        foreach (EquipmentTileAsset equipmentAsset in equipmentAssets)
+        foreach (TileAsset equipmentAsset in equipmentAssets)
         {
+            if (equipmentAsset is not EquipmentTileAsset)
+            {
+                continue;
+            }
+            
             if (_equipmentAssetsDictionary.ContainsKey(equipmentAsset.TileID) == false)
             {
-                _equipmentAssetsDictionary.Add(equipmentAsset.TileID, equipmentAsset);
+                _equipmentAssetsDictionary.Add(equipmentAsset.TileID, (EquipmentTileAsset)equipmentAsset);
             }
         }
     }
