@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TileSurfaceController : MonoBehaviour
+public class TileSelectionController : MonoBehaviour
 {
     [SerializeField] private int _position;
     
@@ -49,6 +49,7 @@ public class TileSurfaceController : MonoBehaviour
                 break;
         }
         
+        PopUpController.Instance.HidePopUp();
         //should show pop up to confirm choice
     }
     

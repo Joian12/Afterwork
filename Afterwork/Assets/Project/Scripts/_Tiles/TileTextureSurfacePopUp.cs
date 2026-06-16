@@ -81,8 +81,8 @@ public class TileTextureSurfacePopUp : MonoBehaviour, IPopUp
     private void CreateTileUI(TileAsset assets)
     {
         GameObject tile = Instantiate(_selectionPrefab, _container);
-        TileSurfaceController tileSurfaceController = tile.GetComponent<TileSurfaceController>();
-        tileSurfaceController.SetTileSurface(assets);
+        TileSelectionController tileSelectionController = tile.GetComponent<TileSelectionController>();
+        tileSelectionController.SetTileSurface(assets);
     }
 
     public void ResetContent()

@@ -9,28 +9,45 @@ namespace Project.Scripts._EditRoom
         [SerializeField] private Button _floorTileButton;
         [SerializeField] private Button _applianceButton;
         [SerializeField] private Button _closeButton;
+        [SerializeField] private Button _openButton;
     
         private RoomEditModeManager _roomEditModeManager => RoomEditModeManager.Instance;
     
         private void OnEnable()
         {
-            _wallpaperButton.onClick.AddListener(() => _roomEditModeManager.SetWallpaperMode());
-            _floorTileButton.onClick.AddListener(() => _roomEditModeManager.SetFloorTileMode());
-            _applianceButton.onClick.AddListener(ApplianceEditMode);
-            _closeButton.onClick.AddListener(() => _roomEditModeManager.ExitEditMode());
+            this._wallpaperButton.onClick.AddListener(() => this._roomEditModeManager.SetWallpaperMode());
+            this._floorTileButton.onClick.AddListener(() => this._roomEditModeManager.SetFloorTileMode());
+            this._applianceButton.onClick.AddListener(ApplianceEditMode);
+            this._openButton.onClick.AddListener(OpenTab);
+            this._closeButton.onClick.AddListener(CloseTab);
         }
-
+        
         private void OnDisable()
         {
-            _wallpaperButton.onClick.RemoveListener(() => _roomEditModeManager.SetWallpaperMode());
-            _floorTileButton.onClick.RemoveListener(() => _roomEditModeManager.SetFloorTileMode());
-            _applianceButton.onClick.RemoveListener(ApplianceEditMode);
-            _closeButton.onClick.RemoveListener(() => _roomEditModeManager.ExitEditMode());
+            this._wallpaperButton.onClick.RemoveListener(() => this._roomEditModeManager.SetWallpaperMode());
+            this._floorTileButton.onClick.RemoveListener(() => this._roomEditModeManager.SetFloorTileMode());
+            this._applianceButton.onClick.RemoveListener(ApplianceEditMode);
+            this._openButton.onClick.RemoveListener(OpenTab);
+            this._closeButton.onClick.RemoveListener(CloseTab);
+        }
+        
+        private void CloseTab()
+        {
+            this._roomEditModeManager.ExitEditMode();
+            this._openButton.gameObject.SetActive(true);
+            this._closeButton.gameObject.SetActive(false);
+        }
+
+        private void OpenTab()
+        {
+            this._roomEditModeManager.OpenEditMode();
+            this._openButton.gameObject.SetActive(false);
+            this._closeButton.gameObject.SetActive(true);
         }
     
         private void ApplianceEditMode()
         {
-            _roomEditModeManager.SetApplianceMode();
+            this._roomEditModeManager.SetApplianceMode();
         
             EquipmentSelectionPopUpData equipmentSelectionPopUpData = new()
             {

@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public sealed class EquipmentSelectionPopUp : MonoBehaviour, IPopUp
 {
     [SerializeField] private GameObject _popUpGameObject;
     [SerializeField] private GameObject _selectionPrefab;
     [SerializeField] private Transform _container;
+    [SerializeField] private Button _closeButton;
     
     public PopUpType PopUpType => PopUpType.EquipmentSelectionPopUp;
     
@@ -13,9 +15,19 @@ public sealed class EquipmentSelectionPopUp : MonoBehaviour, IPopUp
     
     private void Awake()
     {
-        _popUpGameObject.SetActive(false);
+       this._popUpGameObject.SetActive(false);
+    }
+
+    private void OnEnable()
+    {
+        this._closeButton.onClick.AddListener(Hide);
     }
     
+    private void OnDisable()
+    {
+        this._closeButton.onClick.RemoveListener(Hide);
+    }
+
     public void Init()
     {
         var equipmentAssets = RoomManager.Instance.GetTileAssets();
@@ -27,25 +39,26 @@ public sealed class EquipmentSelectionPopUp : MonoBehaviour, IPopUp
                 continue;
             }
             
-            if (_equipmentAssetsDictionary.ContainsKey(equipmentAsset.TileID) == false)
+            if (this._equipmentAssetsDictionary.ContainsKey(equipmentAsset.TileID) == false)
             {
-                _equipmentAssetsDictionary.Add(equipmentAsset.TileID, (EquipmentTileAsset)equipmentAsset);
+                this._equipmentAssetsDictionary.Add(equipmentAsset.TileID, (EquipmentTileAsset)equipmentAsset);
             }
         }
     }
     public void Show()
     {
-        _popUpGameObject.SetActive(true);
+        this._popUpGameObject.SetActive(true);
     }
+    
     public void Hide()
     {
-        _popUpGameObject.SetActive(false);
+        this._popUpGameObject.SetActive(false);
     }
     public void PopulateContent(IPopUpData popUpData)
     {
-        foreach (var equipmentAsset in _equipmentAssetsDictionary.Values)
+        foreach (var equipmentAsset in this._equipmentAssetsDictionary.Values)
         {
-            var selection = Instantiate(_selectionPrefab, _container);
+            var selection = Instantiate(this._selectionPrefab, this._container);
             
             var equipment = selection.GetComponent<EquipmentTileAsset>();
             
@@ -55,7 +68,7 @@ public sealed class EquipmentSelectionPopUp : MonoBehaviour, IPopUp
     
     private void CreateSelection(EquipmentTileAsset equipmentAsset)
     {
-        var selection = Instantiate(_selectionPrefab, _container);
+        var selection = Instantiate(this._selectionPrefab, this._container);
     }
     
     public void ResetContent()

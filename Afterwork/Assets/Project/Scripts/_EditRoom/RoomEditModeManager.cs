@@ -1,4 +1,5 @@
 using UnityEngine;
+using DG.Tweening;
 
 public class RoomEditModeManager : MonoBehaviour
 {
@@ -11,7 +12,8 @@ public class RoomEditModeManager : MonoBehaviour
         FloorTile,
         Appliance
     }
-    
+
+    [SerializeField] private RectTransform _parentPanel;
     [SerializeField] private WallpaperEditHandler _wallpaperHandler;
     [SerializeField] private FloorTileEditHandler _floorTileHandler;
     [SerializeField] private AppliancePlacementHandler _applianceHandler;
@@ -61,11 +63,17 @@ public class RoomEditModeManager : MonoBehaviour
     public void SetApplianceMode()
     {
         SetMode(EditMode.Appliance);
-    }   
+    }
+
+    public void OpenEditMode()
+    {
+        this._parentPanel.DOAnchorPosX(80, 0.2f,true);
+    }
 
     public void ExitEditMode()
     {
         SetMode(EditMode.None);
+        this._parentPanel.DOAnchorPosX(- 80, 0.2f, true);
     }
     
     private void DisableAll()

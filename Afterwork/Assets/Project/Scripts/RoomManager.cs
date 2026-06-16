@@ -25,6 +25,8 @@ public class RoomManager : MonoBehaviour
 
     private void InitializeEquipmentPlacement()
     {
+        AppliancePersistenceManager.Instance.LoadAppliances();
+        
         List<PlacedApplianceData> appliances = AppliancePersistenceManager.Instance.GetAppliances();
         
         if (appliances == null || appliances.Count == 0)

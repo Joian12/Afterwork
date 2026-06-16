@@ -32,7 +32,7 @@ public sealed class AppliancePlacementHandler : MonoBehaviour, IEditModeHandler
 
     private void OnEnable()
     {
-        TileSurfaceController.OnEquipmentSelect += SelectAppliance;
+        TileSelectionController.OnEquipmentSelect += SelectAppliance;
         
         AppliancePersistenceManager.Instance.LoadAppliances();
         this._allOccupiedSpaces = AppliancePersistenceManager.Instance.GetAppliances().ConvertAll(x => new Vector3(x.CellX, 0, x.CellZ));
@@ -40,7 +40,7 @@ public sealed class AppliancePlacementHandler : MonoBehaviour, IEditModeHandler
 
     private void OnDisable()
     {
-        TileSurfaceController.OnEquipmentSelect -= SelectAppliance;
+        TileSelectionController.OnEquipmentSelect -= SelectAppliance;
     }
 
     private void Update()
