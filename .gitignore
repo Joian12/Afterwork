@@ -115,3 +115,5 @@ Afterwork/.idea/.idea.Afterwork
 Afterwork/obj
 Afterwork/Assets/TextMesh Pro
 *.json
+Afterwork/Assets/TextMesh Pro.meta
+Afterwork/Assets/Resources/BillingMode.json.meta
