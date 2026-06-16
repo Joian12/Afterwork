@@ -9,15 +9,21 @@ public sealed class AppliancePlacementHandler : MonoBehaviour, IEditModeHandler
 
     private Camera _camera;
     private const float MaxDistance = 100f;
+    private const float GhostAlpha = 0.4f;
     
     private GameObject _selectedPrefab;
-
     private GameObject _ghost;
-    
     private EquipmentTileAsset _selectedEquipmentAsset;
 
-    // Runtime tracking of what's been placed this session
     private readonly List<PlacedAppliance> _placedAppliances = new();
+    private List<Vector3> _allOccupiedSpaces = new();
+    private readonly List<GhostMaterialData> _ghostMaterials = new();
+
+    private struct GhostMaterialData
+    {
+        public Material Material;
+        public Color OriginalColor;
+    }
 
     private void Awake()
     {
@@ -27,39 +33,21 @@ public sealed class AppliancePlacementHandler : MonoBehaviour, IEditModeHandler
     private void OnEnable()
     {
         TileSurfaceController.OnEquipmentSelect += SelectAppliance;
+        
+        AppliancePersistenceManager.Instance.LoadAppliances();
+        this._allOccupiedSpaces = AppliancePersistenceManager.Instance.GetAppliances().ConvertAll(x => new Vector3(x.CellX, 0, x.CellZ));
+    }
+
+    private void OnDisable()
+    {
+        TileSurfaceController.OnEquipmentSelect -= SelectAppliance;
     }
 
     private void Update()
     {
-        if (this._selectedPrefab == null || this._ghost == null)
-        {
-            return;
-        }
+        if (this._selectedPrefab == null || this._ghost == null) return;
 
-        Ray ray = this._camera.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(ray, out RaycastHit hit, MaxDistance, this._floorMask))
-        {
-            Vector3Int cell = this._grid.WorldToCell(hit.point);
-            Vector3 snapped = this._grid.GetCellCenterWorld(cell);
-            
-            this._ghost.SetActive(true);
-            this._ghost.transform.position = snapped;
-
-            if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
-            {
-                PlaceAppliance(snapped);
-            }
-        }
-        else
-        {
-            this._ghost.SetActive(false);
-        }
-
-        if (Input.GetMouseButtonDown(1)) // testing
-        {
-            ClearSelection();
-        }
+        HandleGhostPlacement();
     }
 
     public void Enable()
@@ -79,31 +67,110 @@ public sealed class AppliancePlacementHandler : MonoBehaviour, IEditModeHandler
         this._selectedPrefab = tileAsset.TilePrefab;
         ClearGhost();
 
-        if (tileAsset.TilePrefab == null)
-            return;
+        if (tileAsset.TilePrefab == null) return;
 
         this._ghost = Instantiate(tileAsset.TilePrefab);
-        MakeGhostTransparent(this._ghost, 0.4f);
+        InitializeGhostMaterials(this._ghost);
+    }
+
+    private void HandleGhostPlacement()
+    {
+        Ray ray = this._camera.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, MaxDistance, this._floorMask))
+        {
+            this._ghost.SetActive(true);
+            
+            Vector3Int cell = this._grid.WorldToCell(hit.point);
+            
+            Vector3 snappedPosition = this._grid.GetCellCenterWorld(cell);
+
+            Vector3 cellPosition = new Vector3(snappedPosition.x, 0, snappedPosition.z);
+            
+            this._ghost.transform.position = cellPosition;
+            
+            bool isOccupied = this._allOccupiedSpaces.Contains(cellPosition);
+
+            UpdateGhostVisuals(isOccupied);
+
+            if (Input.GetMouseButtonDown(0) && isOccupied == false && EventSystem.current.IsPointerOverGameObject() == false)
+            {
+                PlaceAppliance(cellPosition);
+            }
+        }
+        else
+        {
+            this._ghost.SetActive(false);
+        }
+
+        if (Input.GetMouseButtonDown(1)) // testing
+        {
+            ClearSelection();
+        }
     }
     
-    private void PlaceAppliance(Vector3 worldPosition)
+    private void PlaceAppliance( Vector3 cellPosition)
     {
-        GameObject placed = Instantiate(this._selectedPrefab, worldPosition, Quaternion.identity);
-
-        float x = worldPosition.x;
+        GameObject placed = Instantiate(this._selectedPrefab, cellPosition, Quaternion.identity);
         
         var data = new PlacedApplianceData
         {
             TileID = this._selectedEquipmentAsset.TileID,
             PrefabName = this._selectedPrefab.name,
-            CellX = worldPosition.x,
-            CellY = worldPosition.y,
-            CellZ = worldPosition.z
+            CellX = cellPosition.x,
+            CellZ = cellPosition.z,
+            CellY = cellPosition.y,
         };
 
         this._placedAppliances.Add(new PlacedAppliance { SceneObject = placed, Data = data });
+        this._allOccupiedSpaces.Add(cellPosition);
         
         AppliancePersistenceManager.Instance?.AddOrUpdateAppliance(data);
+    }
+
+    private void InitializeGhostMaterials(GameObject ghost)
+    {
+        this._ghostMaterials.Clear();
+
+        foreach (var renderer1 in ghost.GetComponentsInChildren<Renderer>())
+        {
+            foreach (var mat in renderer1.materials)
+            {
+                mat.SetFloat("_Mode", 3f);
+                mat.SetInt("_SrcBlend",  (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+                mat.SetInt("_DstBlend",  (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                mat.SetInt("_ZWrite",    0);
+                mat.DisableKeyword("_ALPHATEST_ON");
+                mat.EnableKeyword("_ALPHABLEND_ON");
+                mat.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+                mat.renderQueue = 3000;
+
+                this._ghostMaterials.Add(new GhostMaterialData
+                {
+                    Material = mat,
+                    OriginalColor = mat.color
+                });
+            }
+        }
+        
+        UpdateGhostVisuals(isOccupied: false);
+    }
+
+    private void UpdateGhostVisuals(bool isOccupied)
+    {
+        foreach (var ghostMat in this._ghostMaterials)
+        {
+            if (isOccupied)
+            {
+                ghostMat.Material.color = new Color(1f, 0f, 0f, GhostAlpha);
+            }
+            else
+            {
+                Color normalColor = ghostMat.OriginalColor;
+                normalColor.a = GhostAlpha;
+                ghostMat.Material.color = normalColor;
+            }
+        }
     }
 
     private void ClearGhost()
@@ -113,6 +180,8 @@ public sealed class AppliancePlacementHandler : MonoBehaviour, IEditModeHandler
             Destroy(this._ghost);
             this._ghost = null;
         }
+
+        this._ghostMaterials.Clear();
     }
 
     private void ClearSelection()
@@ -120,29 +189,6 @@ public sealed class AppliancePlacementHandler : MonoBehaviour, IEditModeHandler
         this._selectedPrefab = null;
         this._selectedEquipmentAsset = null;
         ClearGhost();
-    }
-    
-    private static void MakeGhostTransparent(GameObject ghost, float alpha)
-    {
-        foreach (var r in ghost.GetComponentsInChildren<Renderer>())
-        {
-            foreach (var mat in r.materials)
-            {
-                Color c = mat.color;
-                c.a = alpha;
-                mat.color = c;
-
-                // Switch Standard shader to Transparent mode
-                mat.SetFloat("_Mode", 3f);
-                mat.SetInt("_SrcBlend",  (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-                mat.SetInt("_DstBlend",  (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-                mat.SetInt("_ZWrite",    0);
-                mat.DisableKeyword("_ALPHATEST_ON");
-                mat.EnableKeyword("_ALPHABLEND_ON");
-                mat.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-                mat.renderQueue = 3000;
-            }
-        }
     }
     
     private sealed class PlacedAppliance

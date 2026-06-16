@@ -43,7 +43,7 @@ public class RoomManager : MonoBehaviour
             
             Vector3 worldPosition = new Vector3(appliance.CellX, 0, appliance.CellZ);
             
-            GameObject placed = Instantiate(equipmentAsset.TilePrefab, worldPosition, Quaternion.identity);
+            Instantiate(equipmentAsset.TilePrefab, worldPosition, Quaternion.identity);
         }
     }
     
