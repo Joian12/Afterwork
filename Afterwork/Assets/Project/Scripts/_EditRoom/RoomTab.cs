@@ -15,6 +15,8 @@ namespace Project.Scripts._EditRoom
     
         private void OnEnable()
         {
+            CloseTab();
+            
             this._wallpaperButton.onClick.AddListener(() => this._roomEditModeManager.SetWallpaperMode());
             this._floorTileButton.onClick.AddListener(() => this._roomEditModeManager.SetFloorTileMode());
             this._applianceButton.onClick.AddListener(ApplianceEditMode);

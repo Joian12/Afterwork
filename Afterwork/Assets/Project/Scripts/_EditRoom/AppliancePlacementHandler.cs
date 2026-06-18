@@ -5,7 +5,6 @@ using UnityEngine.EventSystems;
 public sealed class AppliancePlacementHandler : MonoBehaviour, IEditModeHandler
 {
     [SerializeField] private LayerMask _floorMask;
-    [SerializeField] private Grid _grid;
 
     private Camera _camera;
     private const float MaxDistance = 100f;
@@ -77,32 +76,34 @@ public sealed class AppliancePlacementHandler : MonoBehaviour, IEditModeHandler
     {
         Ray ray = this._camera.ScreenPointToRay(Input.mousePosition);
 
-        if (Physics.Raycast(ray, out RaycastHit hit, MaxDistance, this._floorMask))
-        {
-            this._ghost.SetActive(true);
-            
-            Vector3Int cell = this._grid.WorldToCell(hit.point);
-            
-            Vector3 snappedPosition = this._grid.GetCellCenterWorld(cell);
-
-            Vector3 cellPosition = new Vector3(snappedPosition.x, 0, snappedPosition.z);
-            
-            this._ghost.transform.position = cellPosition;
-            
-            bool isOccupied = this._allOccupiedSpaces.Contains(cellPosition);
-
-            UpdateGhostVisuals(isOccupied);
-
-            if (Input.GetMouseButtonDown(0) && isOccupied == false && EventSystem.current.IsPointerOverGameObject() == false)
-            {
-                PlaceAppliance(cellPosition);
-            }
-        }
-        else
+        if (!Physics.Raycast(ray, out RaycastHit hit, MaxDistance, this._floorMask))
         {
             this._ghost.SetActive(false);
+            CheckForCancellation();
+            return;
         }
 
+        this._ghost.SetActive(true);
+    
+        Vector3 targetLocalPos = hit.transform.localPosition;
+        
+        Vector3 ghostPosition = new Vector3(targetLocalPos.x, 0f, targetLocalPos.z);
+    
+        this._ghost.transform.position = ghostPosition;
+    
+        bool isOccupied = this._allOccupiedSpaces.Contains(targetLocalPos);
+        UpdateGhostVisuals(isOccupied);
+
+        if (Input.GetMouseButtonDown(0) && isOccupied == false && EventSystem.current.IsPointerOverGameObject() == false)
+        {
+            PlaceAppliance(targetLocalPos);
+        }
+
+        CheckForCancellation();
+    }
+
+    private void CheckForCancellation()
+    {
         if (Input.GetMouseButtonDown(1)) // testing
         {
             ClearSelection();

@@ -25,6 +25,8 @@ public class RoomEditModeManager : MonoBehaviour
     {
         Instance = this;
         DisableAll();
+        
+        this._parentPanel.anchoredPosition = new Vector2(-80f, 59.762f);
     }
 
     private void SetMode(EditMode mode)
