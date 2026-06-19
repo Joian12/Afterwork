@@ -5,7 +5,7 @@ public class TileSurface : MonoBehaviour
 {
     [SerializeField] private int _tilePos;
     [SerializeField] private Renderer _texture;
-
+    
     public InteriorObjectType interiorObjectType;
     
     private MaterialPropertyBlock _block;
@@ -18,6 +18,7 @@ public class TileSurface : MonoBehaviour
 
     public void SetSurfaceTile(TileAsset asset)
     {
+
         this._texture.GetPropertyBlock(this._block);
         this._block.SetTexture(MainTex, asset.Sprite);
         this._texture.SetPropertyBlock(this._block);
@@ -29,6 +30,11 @@ public class TileSurface : MonoBehaviour
             TileName = asset.TileName,
             interiorObjectType = interiorObjectType
         });
+    }
+
+    public void SetTilePosition(int pos)
+    {
+        this._tilePos = pos;
     }
     
     public int TilePos => _tilePos;

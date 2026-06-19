@@ -14,6 +14,11 @@ public class RoomManager : MonoBehaviour
     
     private void Awake()
     {
+        for (int i = 0; i < _tileSurfaces.Count; i++)
+        {
+            this._tileSurfaces[i].SetTilePosition(i);
+        }
+        
         Instance = this;
     }
 
