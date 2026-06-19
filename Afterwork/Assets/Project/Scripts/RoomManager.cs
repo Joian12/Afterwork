@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using UnityEngine;
 
 //USE MVVM PLEASE
@@ -10,33 +12,59 @@ public class RoomManager : MonoBehaviour
     [SerializeField] private TilePersistenceManager _tilePersistenceManager;
     [SerializeField] private List<TileAsset> _tileAssets;
     
+    [SerializeField] private NavMeshSurface _navMeshSurface;
+    
     public static TileSurface SelectedTileSurface;
     
     private void Awake()
     {
-        for (int i = 0; i < _tileSurfaces.Count; i++)
-        {
-            this._tileSurfaces[i].SetTilePosition(i);
-        }
-        
         Instance = this;
     }
 
     private void Start()
     {
-        InitializeRoomTile();
-        InitializeEquipmentPlacement();
+        StartCoroutine(InitializeRoom());
     }
 
-    private void InitializeEquipmentPlacement()
+    private IEnumerator InitializeRoom()
     {
+        yield return UpdateTilePositionID();
+
+        yield return InitializeRoomTile();
+        
+        yield return InitializeEquipmentPlacement();
+
+        yield return UpdateNavMesh();;
+    }
+
+    private IEnumerator UpdateTilePositionID()
+    {
+        yield return new WaitForEndOfFrame();
+
+        for (int i = 0; i < _tileSurfaces.Count; i++)
+        {
+            this._tileSurfaces[i].SetTilePosition(i);
+        }
+    }
+    
+    private IEnumerator UpdateNavMesh()
+    {
+        yield return new WaitForEndOfFrame();
+
+        this._navMeshSurface.BuildNavMesh();
+    }
+
+    private IEnumerator InitializeEquipmentPlacement()
+    {
+        yield return new WaitForEndOfFrame();
+
         AppliancePersistenceManager.Instance.LoadAppliances();
         
         List<PlacedApplianceData> appliances = AppliancePersistenceManager.Instance.GetAppliances();
         
         if (appliances == null || appliances.Count == 0)
         {
-            return;
+            yield break;
         }
 
         foreach (PlacedApplianceData appliance in appliances)
@@ -54,15 +82,17 @@ public class RoomManager : MonoBehaviour
         }
     }
     
-    private void InitializeRoomTile()
+    private IEnumerator InitializeRoomTile()
     {
+        yield return new WaitForEndOfFrame();
+
         this._tilePersistenceManager.LoadTileSurfaceData();
         
         List<TileSurfaceData> tileSurfaceDataList = this._tilePersistenceManager.GetTileSurfaceDataList();
 
         if (tileSurfaceDataList == null || tileSurfaceDataList.Count == 0)
         {
-            return;
+            yield break;
         }
     
         foreach (var tileSurface in this._tileSurfaces)
@@ -84,6 +114,7 @@ public class RoomManager : MonoBehaviour
                 Debug.LogWarning($"Missing TextureTileAsset for surface type: {data.interiorObjectType}");
             }
         }
+        
     }
     
     public List<TileAsset> GetTileAssets()
