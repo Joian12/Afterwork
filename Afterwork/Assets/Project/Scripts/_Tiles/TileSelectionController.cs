@@ -40,7 +40,7 @@ public class TileSelectionController : MonoBehaviour
         {
             case InteriorObjectType.Wall:
             case InteriorObjectType.Floor:
-                RoomManager.SelectedTileSurface.SetSurfaceTile(_cachedTileAsset);
+                RoomManager.SelectedTileSurface.SetSurfaceTile(this._cachedTileAsset);
                 break;
             case InteriorObjectType.Equipment:
                 OnEquipmentSelect?.Invoke((EquipmentTileAsset)this._cachedTileAsset);
@@ -48,9 +48,10 @@ public class TileSelectionController : MonoBehaviour
             case InteriorObjectType.Door:
                 break;
         }
-        
-        PopUpController.Instance.HidePopUp();
+
         //should show pop up to confirm choice
+        PopUpController.Instance.HidePopUp();
+        
     }
     
     public int Position => _position;

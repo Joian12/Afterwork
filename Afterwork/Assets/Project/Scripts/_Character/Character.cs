@@ -15,7 +15,7 @@ public class Character : MonoBehaviour
 
     private IEnumerator GotoTarget()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
         
         this._navMeshAgent.destination = this._target.position;
         this._navMeshAgent.speed = 2.5f;

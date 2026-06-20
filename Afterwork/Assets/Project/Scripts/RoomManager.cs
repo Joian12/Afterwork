@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.AI.Navigation;
 using UnityEngine;
+using UnityEngine.AI;
 
 //USE MVVM PLEASE
 public class RoomManager : MonoBehaviour
@@ -15,6 +16,8 @@ public class RoomManager : MonoBehaviour
     [SerializeField] private NavMeshSurface _navMeshSurface;
     
     public static TileSurface SelectedTileSurface;
+
+    private NavMeshData _navMeshData;
     
     private void Awake()
     {
@@ -34,23 +37,23 @@ public class RoomManager : MonoBehaviour
         
         yield return InitializeEquipmentPlacement();
 
-        yield return UpdateNavMesh();;
+        yield return BuildNavMesh();
     }
 
     private IEnumerator UpdateTilePositionID()
     {
         yield return new WaitForEndOfFrame();
 
-        for (int i = 0; i < _tileSurfaces.Count; i++)
+        for (int i = 0; i < this._tileSurfaces.Count; i++)
         {
             this._tileSurfaces[i].SetTilePosition(i);
         }
     }
-    
-    private IEnumerator UpdateNavMesh()
+
+    private IEnumerator BuildNavMesh()
     {
         yield return new WaitForEndOfFrame();
-
+        
         this._navMeshSurface.BuildNavMesh();
     }
 
@@ -114,7 +117,6 @@ public class RoomManager : MonoBehaviour
                 Debug.LogWarning($"Missing TextureTileAsset for surface type: {data.interiorObjectType}");
             }
         }
-        
     }
     
     public List<TileAsset> GetTileAssets()
