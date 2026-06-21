@@ -31,7 +31,7 @@ public class RoomManager : MonoBehaviour
 
     private IEnumerator InitializeRoom()
     {
-        yield return UpdateTilePositionID();
+        yield return UpdateTilePositionID(); // temporary solution sorry
 
         yield return InitializeRoomTile();
         

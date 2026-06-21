@@ -11,15 +11,11 @@ public class TilePersistenceManager : MonoBehaviour
     private readonly string _tileSurfaceDataPath = "TileSurfaceData.json";
     
     private List<TileSurfaceData> _tileSurfaceDataList = new();
-    
-    [SerializeField] private Button _saveButton; // test
-    
+
     private void Awake()
     {
         Instance = this;
-        
-        _saveButton.onClick.AddListener(SaveTileSurfaceData);
-        
+
         LoadTileSurfaceData();
     }
     

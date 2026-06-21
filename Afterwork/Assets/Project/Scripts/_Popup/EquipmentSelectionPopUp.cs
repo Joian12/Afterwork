@@ -73,12 +73,12 @@ public sealed class EquipmentSelectionPopUp : MonoBehaviour, IPopUp
     
     public void ResetContent()
     {
-        for (int i = 0; i < _container.childCount; i++)
+        for (int i = 0; i < this._container.childCount; i++)
         {
-            Destroy(_container.GetChild(i).gameObject);
+            Destroy(this._container.GetChild(i).gameObject);
         }
 
-        _popUpGameObject.SetActive(false);
+        this._popUpGameObject.SetActive(false);
     }
 }
 

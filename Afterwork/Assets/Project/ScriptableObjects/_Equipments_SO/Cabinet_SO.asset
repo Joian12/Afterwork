@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89e9613d37f0462daa295a5c67e7f5a1, type: 3}
+  m_Name: Cabinet_SO
+  m_EditorClassIdentifier: Assembly-CSharp::EquipmentTileAsset
+  Sprite: {fileID: 10305, guid: 0000000000000000f000000000000000, type: 0}
+  TileID: 1
+  TileName: Cabinet
+  interiorObjectType: 2
+  TilePrefab: {fileID: 8280348965537015241, guid: b5aad1aa8c8fe42e38344f8d062f40a0, type: 3}
