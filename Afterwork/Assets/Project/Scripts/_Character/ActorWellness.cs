@@ -5,7 +5,8 @@ public enum WellnessState
     BurnOut,
     Sick,
     Stable,
-    Peak
+    Peak,
+    Dead
 }
 
 public class ActorWellness : IWellnessSystem
@@ -29,9 +30,12 @@ public class ActorWellness : IWellnessSystem
     {
         this._mentalHealth = Math.Clamp(this._mentalHealth + mentalChange, 0f, MaxPhysicalHealth);
         this._physicalHealth = Math.Clamp(this._physicalHealth + physicalChange, 0f, MaxPhysicalHealth);
-        
-        
-        if (this._mentalHealth <= 10f || this._physicalHealth <= 10f)
+
+        if (this._mentalHealth <= 0f && this._physicalHealth <= 0f)
+        {
+            this.WellnessState = WellnessState.Dead;
+        }
+        else if (this._mentalHealth <= 10f || this._physicalHealth <= 10f)
         { 
             this.WellnessState = WellnessState.BurnOut;
         }
