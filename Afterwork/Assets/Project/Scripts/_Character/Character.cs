@@ -7,17 +7,20 @@ public class Character : MonoBehaviour
     [SerializeField] private NavMeshAgent _navMeshAgent;
     [SerializeField] private Transform _target;
     
+    private IActorMovement _actorMovement;
+    
     private void Awake()
     {
-        StartCoroutine(GotoTarget());
+        // should be in create
+        this._actorMovement = new ActorMovement(this._navMeshAgent);
         
+        StartCoroutine(GotoTarget());
     }
 
     private IEnumerator GotoTarget()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
         
-        this._navMeshAgent.destination = this._target.position;
-        this._navMeshAgent.speed = 2.5f;
+        this._actorMovement.MoveToTarget(this._target.position);
     }
 }
