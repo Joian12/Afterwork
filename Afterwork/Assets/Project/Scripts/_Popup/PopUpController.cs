@@ -2,12 +2,11 @@ using UnityEngine;
 
 public class PopUpController : MonoBehaviour
 {
-    private IPopUp _currentPopUp;
-    
-    [SerializeField] private TileTextureSurfacePopUp _textureSelectionPopUp;
-    
     public static PopUpController Instance;
-    
+
+    [SerializeField] private TileTextureSurfacePopUp _textureSelectionPopUp;
+    private IPopUp _currentPopUp;
+
     private void Awake()
     {
         Instance = this;
@@ -15,14 +14,14 @@ public class PopUpController : MonoBehaviour
 
     public void ShowPopUp()
     {
-        _currentPopUp?.Show();
+        this._currentPopUp?.Show();
     }
 
     public void HidePopUp()
     {
-        _currentPopUp?.Hide();
+        this._currentPopUp?.Hide();
     }
-    
+
     // only one type for now
     public void SetCurrentPopUp(PopUpType popUpType)
     {
@@ -30,17 +29,17 @@ public class PopUpController : MonoBehaviour
         {
             case PopUpType.EquipmentSelectionPopUp:
             case PopUpType.WallPaperSelectionPopUp:
-            case PopUpType.FloorSelectionPopUp:    
+            case PopUpType.FloorSelectionPopUp:
             default:
-                _currentPopUp = _textureSelectionPopUp;
+                this._currentPopUp = this._textureSelectionPopUp;
                 break;
         }
-        
-        _currentPopUp.Init();
+
+        this._currentPopUp.Init();
     }
 
     public void PopulateContent(IPopUpData popUpData)
     {
-        _currentPopUp?.PopulateContent(popUpData);
+        this._currentPopUp?.PopulateContent(popUpData);
     }
 }

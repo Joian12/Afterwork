@@ -1,15 +1,16 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class TileSurface : MonoBehaviour
 {
+    private static readonly int MainTex = Shader.PropertyToID("_MainTex");
     [SerializeField] private int _tilePos;
     [SerializeField] private Renderer _texture;
-    
+
     public InteriorObjectType interiorObjectType;
-    
+
     private MaterialPropertyBlock _block;
-    private static readonly int MainTex = Shader.PropertyToID("_MainTex");
+
+    public int TilePos => this._tilePos;
 
     private void Awake()
     {
@@ -18,17 +19,16 @@ public class TileSurface : MonoBehaviour
 
     public void SetSurfaceTile(TileAsset asset)
     {
-
         this._texture.GetPropertyBlock(this._block);
         this._block.SetTexture(MainTex, asset.Sprite);
         this._texture.SetPropertyBlock(this._block);
-        
+
         TilePersistenceManager.Instance.AddTileSurfaceData(new TileSurfaceData
         {
             TileId = asset.TileID,
-            TilePos = _tilePos,
+            TilePos = this._tilePos,
             TileName = asset.TileName,
-            interiorObjectType = interiorObjectType
+            interiorObjectType = this.interiorObjectType
         });
     }
 
@@ -36,6 +36,4 @@ public class TileSurface : MonoBehaviour
     {
         this._tilePos = pos;
     }
-    
-    public int TilePos => _tilePos;
 }

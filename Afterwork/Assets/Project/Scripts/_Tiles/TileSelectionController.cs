@@ -5,15 +5,16 @@ using UnityEngine.UI;
 
 public class TileSelectionController : MonoBehaviour
 {
+    public static Action<EquipmentTileAsset> OnEquipmentSelect;
     [SerializeField] private int _position;
-    
+
     [SerializeField] private RawImage _tileSurfaceImage;
     [SerializeField] private TextMeshProUGUI _tileSurfaceText;
-    
+
     [SerializeField] private Button _chooseButton;
     private TileAsset _cachedTileAsset;
-    
-    public static Action<EquipmentTileAsset> OnEquipmentSelect;
+
+    public int Position => this._position;
 
     private void OnEnable()
     {
@@ -51,8 +52,5 @@ public class TileSelectionController : MonoBehaviour
 
         //should show pop up to confirm choice
         PopUpController.Instance.HidePopUp();
-        
     }
-    
-    public int Position => _position;
 }

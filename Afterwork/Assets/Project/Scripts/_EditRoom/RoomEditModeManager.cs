@@ -1,10 +1,8 @@
-using UnityEngine;
 using DG.Tweening;
+using UnityEngine;
 
 public class RoomEditModeManager : MonoBehaviour
 {
-    public static RoomEditModeManager Instance { get; private set; }
-
     public enum EditMode
     {
         None,
@@ -18,34 +16,40 @@ public class RoomEditModeManager : MonoBehaviour
     [SerializeField] private FloorTileEditHandler _floorTileHandler;
     [SerializeField] private AppliancePlacementHandler _applianceHandler;
 
-    private EditMode _currentMode = EditMode.None;
-    public EditMode CurrentMode => _currentMode;
+    public static RoomEditModeManager Instance { get; private set; }
+    public EditMode CurrentMode { get; private set; } = EditMode.None;
 
     private void Awake()
     {
         Instance = this;
         DisableAll();
-        
+
         this._parentPanel.anchoredPosition = new Vector2(-80f, 59.762f);
     }
 
     private void SetMode(EditMode mode)
     {
-        if (_currentMode == mode)
+        if (this.CurrentMode == mode)
         {
             DisableAll();
-            _currentMode = EditMode.None;
+            this.CurrentMode = EditMode.None;
             return;
         }
 
-        _currentMode = mode;
+        this.CurrentMode = mode;
         DisableAll();
 
         switch (mode)
         {
-            case EditMode.Wallpaper: _wallpaperHandler.Enable();  break;
-            case EditMode.FloorTile: _floorTileHandler.Enable();  break;
-            case EditMode.Appliance: _applianceHandler.Enable();  break;
+            case EditMode.Wallpaper:
+                this._wallpaperHandler.Enable();
+                break;
+            case EditMode.FloorTile:
+                this._floorTileHandler.Enable();
+                break;
+            case EditMode.Appliance:
+                this._applianceHandler.Enable();
+                break;
             case EditMode.None:
             default:
                 break;
@@ -69,19 +73,19 @@ public class RoomEditModeManager : MonoBehaviour
 
     public void OpenEditMode()
     {
-        this._parentPanel.DOAnchorPosX(80, 0.2f,true);
+        this._parentPanel.DOAnchorPosX(80, 0.2f, true);
     }
 
     public void ExitEditMode()
     {
         SetMode(EditMode.None);
-        this._parentPanel.DOAnchorPosX(- 80, 0.2f, true);
+        this._parentPanel.DOAnchorPosX(-80, 0.2f, true);
     }
-    
+
     private void DisableAll()
     {
-        _wallpaperHandler.Disable();
-        _floorTileHandler.Disable();
-        _applianceHandler.Disable();
+        this._wallpaperHandler.Disable();
+        this._floorTileHandler.Disable();
+        this._applianceHandler.Disable();
     }
 }

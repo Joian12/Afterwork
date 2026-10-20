@@ -1,16 +1,15 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Serialization;
-using UnityEngine.UI;
 
 public class TilePersistenceManager : MonoBehaviour
 {
-    public static TilePersistenceManager Instance { get; private set; }
-    
     private readonly string _tileSurfaceDataPath = "TileSurfaceData.json";
-    
+
     private List<TileSurfaceData> _tileSurfaceDataList = new();
+    public static TilePersistenceManager Instance { get; private set; }
 
     private void Awake()
     {
@@ -18,70 +17,66 @@ public class TilePersistenceManager : MonoBehaviour
 
         LoadTileSurfaceData();
     }
-    
-    public void AddTileSurfaceData(TileSurfaceData tileSurfaceData)
-    {
-        // just update it if it exists already
-        int index = _tileSurfaceDataList.FindIndex(x => x.TilePos == tileSurfaceData.TilePos);
-        if (index != -1) 
-        {
-            _tileSurfaceDataList[index] = tileSurfaceData;
-            return;
-        }
-        
-        _tileSurfaceDataList.Add(tileSurfaceData);
-    }
-    
-    private void SaveTileSurfaceData()
-    {
-        TileSurfaceDataWrapper tileSurfaceDataWrapper = new();
-        tileSurfaceDataWrapper.TileSurfaceDataList = _tileSurfaceDataList;
-        
-        string json = JsonUtility.ToJson(tileSurfaceDataWrapper, true);
-        File.WriteAllText(_tileSurfaceDataPath, json);
-    }
-    
-    public void LoadTileSurfaceData()
-    {
-        if (File.Exists(_tileSurfaceDataPath) == false)
-        {
-            return;
-        }
-        
-        string json = File.ReadAllText(_tileSurfaceDataPath);
-        TileSurfaceDataWrapper tileSurfaceDataWrapper = JsonUtility.FromJson<TileSurfaceDataWrapper>(json);
-        _tileSurfaceDataList = tileSurfaceDataWrapper.TileSurfaceDataList;
-    }
-    
-    public List<TileSurfaceData> GetTileSurfaceDataList()
-    {
-        return _tileSurfaceDataList;
-    }
-
-    private void OnApplicationQuit()
-    {   
-        SaveTileSurfaceData();
-    }
 
     private void OnApplicationPause(bool pauseStatus)
     {
-        if (pauseStatus)
+        if (pauseStatus) SaveTileSurfaceData();
+    }
+
+    private void OnApplicationQuit()
+    {
+        SaveTileSurfaceData();
+    }
+
+    public void AddTileSurfaceData(TileSurfaceData tileSurfaceData)
+    {
+        // just update it if it exists already
+        var index = this._tileSurfaceDataList.FindIndex(x => x.TilePos == tileSurfaceData.TilePos);
+        if (index != -1)
         {
-            SaveTileSurfaceData();
+            this._tileSurfaceDataList[index] = tileSurfaceData;
+            return;
         }
+
+        this._tileSurfaceDataList.Add(tileSurfaceData);
+    }
+
+    private void SaveTileSurfaceData()
+    {
+        TileSurfaceDataWrapper tileSurfaceDataWrapper = new();
+        tileSurfaceDataWrapper.TileSurfaceDataList = this._tileSurfaceDataList;
+
+        var json = JsonUtility.ToJson(tileSurfaceDataWrapper, true);
+        File.WriteAllText(this._tileSurfaceDataPath, json);
+    }
+
+    public void LoadTileSurfaceData()
+    {
+        if (File.Exists(this._tileSurfaceDataPath) == false) return;
+
+        var json = File.ReadAllText(this._tileSurfaceDataPath);
+        var tileSurfaceDataWrapper = JsonUtility.FromJson<TileSurfaceDataWrapper>(json);
+        this._tileSurfaceDataList = tileSurfaceDataWrapper.TileSurfaceDataList;
+    }
+
+    public List<TileSurfaceData> GetTileSurfaceDataList()
+    {
+        return this._tileSurfaceDataList;
     }
 }
 
-[System.Serializable]
+[Serializable]
 public class TileSurfaceData
 {
     public int TileId;
     public int TilePos;
     public string TileName;
-    [FormerlySerializedAs("TileSurfaceType")] public InteriorObjectType interiorObjectType;
+
+    [FormerlySerializedAs("TileSurfaceType")]
+    public InteriorObjectType interiorObjectType;
 }
 
-[System.Serializable]
+[Serializable]
 public class TileSurfaceDataWrapper
 {
     public List<TileSurfaceData> TileSurfaceDataList;

@@ -10,20 +10,20 @@ namespace Project.Scripts._EditRoom
         [SerializeField] private Button _applianceButton;
         [SerializeField] private Button _closeButton;
         [SerializeField] private Button _openButton;
-    
+
         private RoomEditModeManager _roomEditModeManager => RoomEditModeManager.Instance;
-    
+
         private void OnEnable()
         {
             CloseTab();
-            
+
             this._wallpaperButton.onClick.AddListener(() => this._roomEditModeManager.SetWallpaperMode());
             this._floorTileButton.onClick.AddListener(() => this._roomEditModeManager.SetFloorTileMode());
             this._applianceButton.onClick.AddListener(ApplianceEditMode);
             this._openButton.onClick.AddListener(OpenTab);
             this._closeButton.onClick.AddListener(CloseTab);
         }
-        
+
         private void OnDisable()
         {
             this._wallpaperButton.onClick.RemoveListener(() => this._roomEditModeManager.SetWallpaperMode());
@@ -32,7 +32,7 @@ namespace Project.Scripts._EditRoom
             this._openButton.onClick.RemoveListener(OpenTab);
             this._closeButton.onClick.RemoveListener(CloseTab);
         }
-        
+
         private void CloseTab()
         {
             this._roomEditModeManager.ExitEditMode();
@@ -46,17 +46,17 @@ namespace Project.Scripts._EditRoom
             this._openButton.gameObject.SetActive(false);
             this._closeButton.gameObject.SetActive(true);
         }
-    
+
         private void ApplianceEditMode()
         {
             this._roomEditModeManager.SetApplianceMode();
-        
+
             EquipmentSelectionPopUpData equipmentSelectionPopUpData = new()
             {
                 InteriorObjectType = InteriorObjectType.Equipment,
                 PopUpTitle = string.Empty
             };
-        
+
             PopUpController.Instance.SetCurrentPopUp(PopUpType.EquipmentSelectionPopUp);
             PopUpController.Instance.PopulateContent(equipmentSelectionPopUpData);
             PopUpController.Instance.ShowPopUp();

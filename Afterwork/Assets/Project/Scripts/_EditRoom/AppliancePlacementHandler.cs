@@ -1,45 +1,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering;
 
 public sealed class AppliancePlacementHandler : MonoBehaviour, IEditModeHandler
 {
-    [SerializeField] private LayerMask _floorMask;
-
-    private Camera _camera;
     private const float MaxDistance = 100f;
     private const float GhostAlpha = 0.4f;
-    
-    private GameObject _selectedPrefab;
-    private GameObject _ghost;
-    private EquipmentTileAsset _selectedEquipmentAsset;
+    [SerializeField] private LayerMask _floorMask;
+    private readonly List<GhostMaterialData> _ghostMaterials = new();
 
     private readonly List<PlacedAppliance> _placedAppliances = new();
     private List<Vector3> _allOccupiedSpaces = new();
-    private readonly List<GhostMaterialData> _ghostMaterials = new();
 
-    private struct GhostMaterialData
-    {
-        public Material Material;
-        public Color OriginalColor;
-    }
+    private Camera _camera;
+    private GameObject _ghost;
+    private EquipmentTileAsset _selectedEquipmentAsset;
+
+    private GameObject _selectedPrefab;
 
     private void Awake()
     {
         this._camera = Camera.main;
-    }
-
-    private void OnEnable()
-    {
-        TileSelectionController.OnEquipmentSelect += SelectAppliance;
-        
-        AppliancePersistenceManager.Instance.LoadAppliances();
-        this._allOccupiedSpaces = AppliancePersistenceManager.Instance.GetAppliances().ConvertAll(x => new Vector3(x.CellX, 0, x.CellZ));
-    }
-
-    private void OnDisable()
-    {
-        TileSelectionController.OnEquipmentSelect -= SelectAppliance;
     }
 
     private void Update()
@@ -47,6 +29,20 @@ public sealed class AppliancePlacementHandler : MonoBehaviour, IEditModeHandler
         if (this._selectedPrefab == null || this._ghost == null) return;
 
         HandleGhostPlacement();
+    }
+
+    private void OnEnable()
+    {
+        TileSelectionController.OnEquipmentSelect += SelectAppliance;
+
+        AppliancePersistenceManager.Instance.LoadAppliances();
+        this._allOccupiedSpaces = AppliancePersistenceManager.Instance.GetAppliances()
+            .ConvertAll(x => new Vector3(x.CellX, 0, x.CellZ));
+    }
+
+    private void OnDisable()
+    {
+        TileSelectionController.OnEquipmentSelect -= SelectAppliance;
     }
 
     public void Enable()
@@ -59,7 +55,7 @@ public sealed class AppliancePlacementHandler : MonoBehaviour, IEditModeHandler
         this.enabled = false;
         ClearGhost();
     }
-    
+
     public void SelectAppliance(EquipmentTileAsset tileAsset)
     {
         this._selectedEquipmentAsset = tileAsset;
@@ -74,9 +70,9 @@ public sealed class AppliancePlacementHandler : MonoBehaviour, IEditModeHandler
 
     private void HandleGhostPlacement()
     {
-        Ray ray = this._camera.ScreenPointToRay(Input.mousePosition);
+        var ray = this._camera.ScreenPointToRay(Input.mousePosition);
 
-        if (!Physics.Raycast(ray, out RaycastHit hit, MaxDistance, this._floorMask))
+        if (!Physics.Raycast(ray, out var hit, MaxDistance, this._floorMask))
         {
             this._ghost.SetActive(false);
             CheckForCancellation();
@@ -84,20 +80,18 @@ public sealed class AppliancePlacementHandler : MonoBehaviour, IEditModeHandler
         }
 
         this._ghost.SetActive(true);
-    
-        Vector3 targetLocalPos = hit.transform.localPosition;
-        
-        Vector3 ghostPosition = new Vector3(targetLocalPos.x, 0f, targetLocalPos.z);
-    
+
+        var targetLocalPos = hit.transform.localPosition;
+
+        var ghostPosition = new Vector3(targetLocalPos.x, 0f, targetLocalPos.z);
+
         this._ghost.transform.position = ghostPosition;
-    
-        bool isOccupied = this._allOccupiedSpaces.Contains(targetLocalPos);
+
+        var isOccupied = this._allOccupiedSpaces.Contains(targetLocalPos);
         UpdateGhostVisuals(isOccupied);
 
-        if (Input.GetMouseButtonDown(0) && isOccupied == false && EventSystem.current.IsPointerOverGameObject() == false)
-        {
-            PlaceAppliance(targetLocalPos);
-        }
+        if (Input.GetMouseButtonDown(0) && isOccupied == false &&
+            EventSystem.current.IsPointerOverGameObject() == false) PlaceAppliance(targetLocalPos);
 
         CheckForCancellation();
     }
@@ -105,27 +99,25 @@ public sealed class AppliancePlacementHandler : MonoBehaviour, IEditModeHandler
     private void CheckForCancellation()
     {
         if (Input.GetMouseButtonDown(1)) // testing
-        {
             ClearSelection();
-        }
     }
-    
-    private void PlaceAppliance( Vector3 cellPosition)
+
+    private void PlaceAppliance(Vector3 cellPosition)
     {
-        GameObject placed = Instantiate(this._selectedPrefab, cellPosition, Quaternion.identity);
-        
+        var placed = Instantiate(this._selectedPrefab, cellPosition, Quaternion.identity);
+
         var data = new PlacedApplianceData
         {
             TileID = this._selectedEquipmentAsset.TileID,
             PrefabName = this._selectedPrefab.name,
             CellX = cellPosition.x,
             CellZ = cellPosition.z,
-            CellY = cellPosition.y,
+            CellY = cellPosition.y
         };
 
         this._placedAppliances.Add(new PlacedAppliance { SceneObject = placed, Data = data });
         this._allOccupiedSpaces.Add(cellPosition);
-        
+
         AppliancePersistenceManager.Instance?.AddOrUpdateAppliance(data);
     }
 
@@ -134,44 +126,40 @@ public sealed class AppliancePlacementHandler : MonoBehaviour, IEditModeHandler
         this._ghostMaterials.Clear();
 
         foreach (var renderer1 in ghost.GetComponentsInChildren<Renderer>())
+        foreach (var mat in renderer1.materials)
         {
-            foreach (var mat in renderer1.materials)
-            {
-                mat.SetFloat("_Mode", 3f);
-                mat.SetInt("_SrcBlend",  (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-                mat.SetInt("_DstBlend",  (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-                mat.SetInt("_ZWrite",    0);
-                mat.DisableKeyword("_ALPHATEST_ON");
-                mat.EnableKeyword("_ALPHABLEND_ON");
-                mat.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-                mat.renderQueue = 3000;
+            mat.SetFloat("_Mode", 3f);
+            mat.SetInt("_SrcBlend", (int)BlendMode.SrcAlpha);
+            mat.SetInt("_DstBlend", (int)BlendMode.OneMinusSrcAlpha);
+            mat.SetInt("_ZWrite", 0);
+            mat.DisableKeyword("_ALPHATEST_ON");
+            mat.EnableKeyword("_ALPHABLEND_ON");
+            mat.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+            mat.renderQueue = 3000;
 
-                this._ghostMaterials.Add(new GhostMaterialData
-                {
-                    Material = mat,
-                    OriginalColor = mat.color
-                });
-            }
+            this._ghostMaterials.Add(new GhostMaterialData
+            {
+                Material = mat,
+                OriginalColor = mat.color
+            });
         }
-        
-        UpdateGhostVisuals(isOccupied: false);
+
+        UpdateGhostVisuals(false);
     }
 
     private void UpdateGhostVisuals(bool isOccupied)
     {
         foreach (var ghostMat in this._ghostMaterials)
-        {
             if (isOccupied)
             {
                 ghostMat.Material.color = new Color(1f, 0f, 0f, GhostAlpha);
             }
             else
             {
-                Color normalColor = ghostMat.OriginalColor;
+                var normalColor = ghostMat.OriginalColor;
                 normalColor.a = GhostAlpha;
                 ghostMat.Material.color = normalColor;
             }
-        }
     }
 
     private void ClearGhost()
@@ -191,10 +179,16 @@ public sealed class AppliancePlacementHandler : MonoBehaviour, IEditModeHandler
         this._selectedEquipmentAsset = null;
         ClearGhost();
     }
-    
+
+    private struct GhostMaterialData
+    {
+        public Material Material;
+        public Color OriginalColor;
+    }
+
     private sealed class PlacedAppliance
     {
-        public GameObject SceneObject;
         public PlacedApplianceData Data;
+        public GameObject SceneObject;
     }
 }

@@ -1,6 +1,7 @@
+using System;
 using System.Collections.Generic;
 
-[System.Serializable]
+[Serializable]
 public class PlacedApplianceData
 {
     public int TileID;
@@ -10,7 +11,7 @@ public class PlacedApplianceData
     public float CellZ;
 }
 
-[System.Serializable]
+[Serializable]
 public class ApplianceSaveData
 {
     public List<PlacedApplianceData> Appliances = new();

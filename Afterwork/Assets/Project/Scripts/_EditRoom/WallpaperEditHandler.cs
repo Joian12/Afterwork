@@ -1,12 +1,6 @@
 public sealed class WallpaperEditHandler : SurfaceTextureEditHandler
 {
-    protected override InteriorObjectType TargetSurface
-    {
-        get { return InteriorObjectType.Wall; }
-    }
+    protected override InteriorObjectType TargetSurface => InteriorObjectType.Wall;
 
-    protected override PopUpType TargetPopUpType
-    {
-        get { return PopUpType.WallPaperSelectionPopUp; }
-    }
+    protected override PopUpType TargetPopUpType => PopUpType.WallPaperSelectionPopUp;
 }
