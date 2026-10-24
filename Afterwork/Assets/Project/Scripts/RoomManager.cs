@@ -44,7 +44,10 @@ public class RoomManager : MonoBehaviour
     {
         yield return new WaitForEndOfFrame();
 
-        for (var i = 0; i < this._tileSurfaces.Count; i++) this._tileSurfaces[i].SetTilePosition(i);
+        for (var i = 0; i < this._tileSurfaces.Count; i++)
+        {
+            this._tileSurfaces[i].SetTilePosition(i);
+        }
     }
 
     private IEnumerator BuildNavMesh()
@@ -62,7 +65,10 @@ public class RoomManager : MonoBehaviour
 
         var appliances = AppliancePersistenceManager.Instance.GetAppliances();
 
-        if (appliances == null || appliances.Count == 0) yield break;
+        if (appliances == null || appliances.Count == 0)
+        {
+            yield break;
+        }
 
         foreach (var appliance in appliances)
         {
@@ -86,20 +92,30 @@ public class RoomManager : MonoBehaviour
 
         var tileSurfaceDataList = this._tilePersistenceManager.GetTileSurfaceDataList();
 
-        if (tileSurfaceDataList == null || tileSurfaceDataList.Count == 0) yield break;
+        if (tileSurfaceDataList == null || tileSurfaceDataList.Count == 0)
+        {
+            yield break;
+        }
 
         foreach (var tileSurface in this._tileSurfaces)
         {
             var data = tileSurfaceDataList.Find(x => x.TilePos == tileSurface.TilePos);
-            if (data == null) continue;
+            if (data == null)
+            {
+                continue;
+            }
 
             var asset = this._tileAssets.Find(x =>
                 x.TileID == data.TileId && x.interiorObjectType == data.interiorObjectType);
 
             if (asset != null)
+            {
                 tileSurface.SetSurfaceTile(asset);
+            }
             else
+            {
                 Debug.LogWarning($"Missing TextureTileAsset for surface type: {data.interiorObjectType}");
+            }
         }
     }
 
@@ -107,18 +123,4 @@ public class RoomManager : MonoBehaviour
     {
         return this._tileAssets;
     }
-}
-
-public interface IMountable
-{
-    InteriorObjectType SurfaceType { get; }
-    int PositionX { get; }
-    int PositionY { get; }
-}
-
-public sealed class DefaultMountable : IMountable
-{
-    public InteriorObjectType SurfaceType { get; }
-    public int PositionX { get; }
-    public int PositionY { get; }
 }
